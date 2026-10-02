@@ -14,7 +14,7 @@ const common = {
   permissions: ['storage'],
   host_permissions: ['http://*/*', 'https://*/*'],
   action: { default_title: 'Quiet Exit', default_popup: 'popup/popup.html' },
-  icons: Object.fromEntries([16, 32, 48, 128].map(size => [size, `assets/icon-${size}.png`])),
+  icons: Object.fromEntries([16, 32, 48, 64, 96, 128, 256, 512].map(size => [size, `assets/icon-${size}.png`])),
   content_scripts: [{
     matches: ['http://*/*', 'https://*/*'],
     js: ['content/platforms.js', 'content/engine.js', 'content/content.js'],
@@ -29,6 +29,8 @@ const common = {
 await rm(path.join(root, 'dist/firefox'), { recursive: true, force: true });
 for (const browser of ['chrome', 'safari']) {
   const manifest = structuredClone(common);
+  manifest.action.default_icon = Object.fromEntries([16, 19, 32, 38, 48]
+    .map(size => [size, `assets/toolbar-${browser}-${size}.png`]));
   if (browser === 'chrome') {
     manifest.minimum_chrome_version = '120';
     manifest.background = { service_worker: 'background.js' };

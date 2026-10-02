@@ -33,6 +33,8 @@ Open the generated Xcode project, choose your signing team for its app and exten
 
 The Safari native wrapper and physical iPhone/iPad installation are not yet verified. WebKit DOM tests are useful engine checks, not a substitute for those installation tests.
 
+See the [MacminiM4 iPhone/iPad testing handoff](docs/IOS-TESTING.md) for Xcode setup, manual fixtures and a reusable kickoff prompt.
+
 The temporary unpacked extension has been verified in native macOS Safari, including popup rendering, saved toggle state, automatic rejection of a local test banner and counting. If you already loaded `dist/safari` as a temporary extension, rebuild and use **Safari Settings → Extensions → Quiet Exit → Reload** to apply updates.
 
 ## Behaviour

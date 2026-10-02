@@ -24,4 +24,6 @@ const result = spawnSync('xcrun', [tool, path.join(root, 'dist/safari'),
   '--bundle-identifier', 'com.ericescapes.quietexit', '--swift', '--no-open', '--no-prompt'],
 { stdio: 'inherit' });
 if (result.error || result.status !== 0) throw result.error || new Error('Safari packaging failed');
+const icons = spawnSync(process.execPath, [path.join(root, 'scripts/safari-icons.mjs')], { stdio: 'inherit' });
+if (icons.error || icons.status !== 0) throw icons.error || new Error('Safari app icon setup failed; inspect safari/ before building.');
 console.log('Open the project in safari/ with Xcode, choose your signing team, and build the macOS or iOS app.');
