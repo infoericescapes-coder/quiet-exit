@@ -110,6 +110,32 @@ try {
       assert.equal(await page.locator('#CybotCookiebotDialog').count(), 1);
       assert.deepEqual(errors, []);
       results.push(`${name}: late rejection, unrelated/accept controls untouched, disable, async management and toggle verification, unknown preference blocks save`);
+      // Safari starts its content-sized action popover at a tiny viewport.
+      // Exercise the real popup CSS, which the DOM-only popup tests cannot do.
+      const sizingPopup = await browser.newPage({ viewport: { width: 50, height: 600 } });
+      await sizingPopup.addInitScript(() => {
+        const saved = { enabled: true, deniedCount: 2 };
+        window.browser = { storage: {
+          local: { get: async () => ({ ...saved }), set: async value => Object.assign(saved, value) },
+          onChanged: { addListener() {} },
+        } };
+      });
+      await sizingPopup.goto(`${origin}/popup/popup.html`);
+      await sizingPopup.waitForFunction(() => document.querySelector('#enabled').disabled === false);
+      await sizingPopup.evaluate(() => document.fonts.ready);
+      const measured = await sizingPopup.evaluate(() => ({
+        rootWidth: document.documentElement.getBoundingClientRect().width,
+        bodyWidth: document.body.getBoundingClientRect().width,
+        background: getComputedStyle(document.documentElement).backgroundColor,
+      }));
+      assert.ok(measured.rootWidth >= 320 && measured.bodyWidth >= 320, `${name}: collapsed initial popup`);
+      assert.equal(measured.background, 'rgb(5, 6, 5)');
+      for (const width of [320, 321, 330, 340, 390]) {
+        await sizingPopup.setViewportSize({ width, height: 600 });
+        assert.ok(await sizingPopup.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${name}: popup overflows at ${width}`);
+      }
+      await sizingPopup.screenshot({ path: path.join(artifacts, `popup-${name}-sizing.png`), fullPage: true });
+      results.push(`${name}: popup keeps intrinsic width during initial sizing and fits narrow mobile viewports`);
     } catch (error) {
       failures.push(`${name}: ${error.message}`);
     } finally { if (browser) await browser.close(); }

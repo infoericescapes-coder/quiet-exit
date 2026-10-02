@@ -1,6 +1,6 @@
 # Consent coverage
 
-Quiet Exit 0.1.0 targets English consent interfaces in Chrome and Safari. The rules recognise the scopes below. Recognition does not guarantee that every deployment, theme or version of a consent manager can be handled.
+Quiet Exit 0.1.1 targets English consent interfaces in Chrome and Safari. The rules recognise the scopes below. Recognition does not guarantee that every deployment, theme or version of a consent manager can be handled.
 
 | Consent manager | Direct rejection | Preferences without a reject control |
 | --- | --- | --- |
@@ -33,3 +33,11 @@ Popup screenshots were inspected at 320px and checked for overflow at 320px, 390
 Safari web resources build successfully. Native macOS/iOS packaging cannot be verified on the development host because full Xcode is not installed. The `npm run safari` command reports this condition and exits unsuccessfully; it does not produce a pretend app. Physical iPhone/iPad installation, Safari site-access behaviour and signed distribution remain outstanding.
 
 Firefox was removed from scope at the owner's request.
+
+### Safari popup fix, 3 October 2026
+
+Native macOS Safari 27 displayed a blank, narrow popover while its accessibility tree still contained the loaded popup. The popup now supplies an intrinsic 320px minimum document width, a 340px preferred width and an explicit root background. This prevents collapse while Safari measures the content for its popover; a viewport cap still fits widths between 320px and 340px.
+
+The installed temporary extension was reloaded in Safari and verified visually. Pausing persisted after closing/reopening the popup, then enabling restored operation. On a local synthetic OneTrust banner, Safari clicked rejection automatically and the popup count increased from 0 to 1. This is native extension verification with a fixture, not proof of Klook or every live consent-manager deployment.
+
+The browser checks now load the actual popup CSS in Chromium and WebKit at an initial 50px viewport and require a non-collapsed document. They then check 320, 321, 330, 340 and 390px viewports for overflow. Signed Safari wrapper distribution and physical iPhone/iPad verification remain outstanding.
