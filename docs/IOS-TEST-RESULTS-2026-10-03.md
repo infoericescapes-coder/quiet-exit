@@ -1,6 +1,6 @@
 # iOS verification — 3 October 2026
 
-Status: simulator core flows passed; physical iPhone installed but launch blocked by its lock screen; physical iPad testing deferred by Eric until TestFlight. No distribution archive, export or TestFlight upload has completed. Release credential use awaits Eric's presence confirmation under his standing signing instructions.
+Status: simulator core flows passed; physical iPhone installed but launch blocked by its lock screen; physical iPad testing deferred by Eric until TestFlight. **TestFlight 0.1.2 (1) is uploaded, processed VALID and Testing in Eric Internal Testing (one tester, one build).** Eric confirmed presence before signing. Physical-device behavior remains unverified; the TestFlight build is now available for that testing.
 
 ## Provenance
 
@@ -50,7 +50,7 @@ The remaining native negative fixture matrix (unreadable/disabled/hidden/missing
 
 ## Release follow-up and known limits
 
-The current request authorizes TestFlight submission once ready; older handoff wording prohibiting upload does not revoke it. Signing still follows Eric’s separate requirement that he be present, using a disposable per-run keychain and `/usr/bin/rsync` export shim. The App Store Connect app record, available build number, distribution provisioning and processing status have not yet been verified. `scripts/release-ios.sh` prepares the scoped archive/export/upload path; it defaults to local preflight and requires explicit `--execute`, verified account/build inputs and the reviewed local App Store Connect helper. Shell syntax and static review do not establish release execution success. No TestFlight availability is claimed.
+Eric confirmed presence and authorized proceeding. The release used a disposable per-run keychain and `/usr/bin/rsync` export shim. `scripts/release-ios.sh` now requires separate app/extension App Store profile UUIDs for manual export/upload; automatic development signing remains for archive. See the verified release record below. The draft PR remains open pending physical-device testing; no public App Store release or external beta-review approval is claimed.
 
 Counter delivery is bounded best effort: exhaustion, queue overflow, navigation or disabling may discard an unacknowledged report. An already in-flight background operation may still finish after disabling. Closed shadow roots on ordinary native hosts are not observable by this inventory; support outside inspected layouts is unknown. A count reflects interface disappearance after a rejection action, not proof of server-side consent enforcement.
 
@@ -67,3 +67,16 @@ Counter delivery is bounded best effort: exhaustion, queue overflow, navigation 
 - [iPad landscape popup after Safari restart](evidence/2026-10-03/ipad-popup-landscape.png)
 
 Full local build/check logs and additional screenshots remain in ignored `artifacts/ios-testing-2026-10-03/`. Screenshots above contain synthetic fixtures only.
+
+## Verified TestFlight release, 3 October 2026
+
+- App Store Connect app: **6818695484**, Quiet Exit, bundle `com.ericescapes.quietexit`, primary locale en-AU. Created the missing app record and explicit app/extension bundle IDs under the existing team.
+- Version **0.1.2**, build **1**; upload succeeded at **13:12 AEST**. ASC reports build ID `98c1310e-180d-489c-aa13-245c02b8c0a3`, uploadedDate `2026-10-02T20:12:50-07:00` (13:12:50 AEST on 3 October), processing **VALID**.
+- Internal group **Eric Internal Testing** contains Eric’s existing account and this build. UI reports **Testing**, one tester, one build. Automatic distribution of future builds is disabled. Test instructions were saved for this build.
+- The first archive succeeded, but automatic export failed with cloud-signing permission errors and missing App Store profiles. No upload happened on that attempt. Created separate active IOS_APP_STORE profiles for the app and extension using the existing, verified Apple Distribution certificate. Manual export and upload then succeeded.
+- Xcode **26.6 (17F113)** performed the release. Both exported app and appex passed signature verification, show `Authority=Apple Distribution: Eric Kowalczyk (B3Z8GRN254)`, and report version 0.1.2/build 1/minimum iOS 15.4. Both contain `ITSAppUsesNonExemptEncryption=false`; source review found no non-exempt encryption. All 34 exported Safari resource files exactly match `dist/safari`.
+- The local exported IPA SHA-256 is `5dab5651b52ce03c31f8e61f4d4b8a1189c2e635b2de15206df5690f8f50b588`. Upload is a separate Xcode export from the same archive with the same signing/profile mapping.
+- Disposable keychain removal and shim cleanup passed. Before/after/current keychain search lists are byte-identical. Existing fixed-path keychains were not accessed or changed. No key material or provisioning profiles are committed.
+- Release log: ignored `artifacts/ios-testing-2026-10-03/release-0.1.2-1-manual.log`; archive/export/readback: ignored `artifacts/ios-release-0.1.2-1-20261003T031013Z-35418/`. Initial failure log is retained separately.
+
+[TestFlight build](https://appstoreconnect.apple.com/apps/6818695484/testflight/ios/98c1310e-180d-489c-aa13-245c02b8c0a3) · [Testing status screenshot](evidence/2026-10-03/testflight-testing.jpg)

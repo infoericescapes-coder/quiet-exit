@@ -20,7 +20,10 @@ usage() {
 Usage: ASC_APP_ID=<verified numeric ID> BUILD_NUMBER=<unused integer> bash scripts/release-ios.sh [--execute]
 Default: local preflight only; no key reads, API calls, keychain changes or builds.
 --execute: live account/duplicate checks, automatic archive signing, distribution
-           export, signature verification, upload and bounded ASC processing check.
+           manual export, signature verification, upload and bounded ASC processing check.
+Execution requires APP_PROFILE_UUID and EXTENSION_PROFILE_UUID identifying the
+installed App Store profiles for the app and extension respectively. Archive
+signing stays automatic; each export bundle uses its own explicit profile UUID.
 Execution also requires ASC_API_SCRIPT pointing to the reviewed Simple Social
 scripts/asc_api.py, exactly one ~/private_keys/AuthKey_*.p8, issuer_id.txt,
 and the distribution inputs named by apple-signing-for-codex.md.
@@ -67,6 +70,11 @@ if [[ "$EXECUTE" -eq 0 ]]; then
 fi
 
 # Everything below may authenticate or sign. Never source this script.
+UUID_PATTERN='^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+[[ "${APP_PROFILE_UUID:-}" =~ $UUID_PATTERN ]] || fail "set APP_PROFILE_UUID to the installed app App Store profile UUID"
+[[ "${EXTENSION_PROFILE_UUID:-}" =~ $UUID_PATTERN ]] || fail "set EXTENSION_PROFILE_UUID to the installed extension App Store profile UUID"
+[[ "$(printf '%s' "$APP_PROFILE_UUID" | tr '[:lower:]' '[:upper:]')" != "$(printf '%s' "$EXTENSION_PROFILE_UUID" | tr '[:lower:]' '[:upper:]')" ]] \
+  || fail "app and extension require distinct provisioning profiles"
 [[ -n "${ASC_API_SCRIPT:-}" && -f "$ASC_API_SCRIPT" ]] || fail "set ASC_API_SCRIPT to the reviewed Simple Social/scripts/asc_api.py"
 command -v python3 >/dev/null || fail "Python 3 is required"
 command -v xcodebuild >/dev/null || fail "full Xcode is required"
@@ -672,13 +680,15 @@ xcodebuild archive -project "$PROJECT" -scheme "$SCHEME" \
     -archivePath "$ARCHIVE" -derivedDataPath "$RUN_DIR/DerivedData" \
     MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD_NUM" \
     IPHONEOS_DEPLOYMENT_TARGET=15.4 \
+    INFOPLIST_KEY_ITSAppUsesNonExemptEncryption=NO \
     DEVELOPMENT_TEAM="$TEAM" CODE_SIGN_STYLE=Automatic \
     -allowProvisioningUpdates -authenticationKeyPath "$KEY_PATH" \
     -authenticationKeyID "$KEY_ID" -authenticationKeyIssuerID "$ISSUER_ID"
-python3 - "$EXPORT_PLIST" "$UPLOAD_PLIST" "$TEAM" "$SIGN_SHA1" <<'PYOPTIONS'
+python3 - "$EXPORT_PLIST" "$UPLOAD_PLIST" "$TEAM" "$SIGN_SHA1" "$BUNDLE_ID" "$APP_PROFILE_UUID" "$EXTENSION_ID" "$EXTENSION_PROFILE_UUID" <<'PYOPTIONS'
 import plistlib,sys
 options={"method":"app-store-connect", "destination":"export", "teamID":sys.argv[3],
-         "signingStyle":"automatic", "signingCertificate":sys.argv[4],
+         "signingStyle":"manual", "signingCertificate":sys.argv[4],
+         "provisioningProfiles":{sys.argv[5]:sys.argv[6], sys.argv[7]:sys.argv[8]},
          "manageAppVersionAndBuildNumber":False, "testFlightInternalTestingOnly":False}
 for filename,destination in [(sys.argv[1],"export"),(sys.argv[2],"upload")]:
     options["destination"]=destination
@@ -712,6 +722,8 @@ for bundle in "$APP" "$EXTENSION"; do
 done
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist")" == "$BUNDLE_ID" ]] || fail "exported app ID mismatch"
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$EXTENSION/Info.plist")" == "$EXTENSION_ID" ]] || fail "exported extension ID mismatch"
+[[ "$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$APP/Info.plist")" == "false" ]] \
+  || fail "exported app must declare ITSAppUsesNonExemptEncryption=false"
 PATH="$RSYNC_SHIM_DIR:$PATH" xcodebuild -exportArchive \
     -archivePath "$ARCHIVE" -exportPath "$RUN_DIR/upload" -exportOptionsPlist "$UPLOAD_PLIST" \
     -allowProvisioningUpdates -authenticationKeyPath "$KEY_PATH" \
