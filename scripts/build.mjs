@@ -35,7 +35,10 @@ for (const browser of ['chrome', 'safari']) {
     manifest.minimum_chrome_version = '120';
     manifest.background = { service_worker: 'background.js' };
   } else {
-    manifest.background = { scripts: ['background.js'] };
+    manifest.background = { service_worker: 'background.js' };
+    for (const contentScript of manifest.content_scripts) {
+      delete contentScript.match_about_blank;
+    }
   }
   const output = path.join(root, 'dist', browser);
   await rm(output, { recursive: true, force: true });

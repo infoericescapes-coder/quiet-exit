@@ -123,8 +123,12 @@
   }
   function unsafePanel(panel) {
     if (!visible(panel, false)) return true;
+    // Inventory only understands light DOM. Reject component hosts even without
+    // an observable root: a closed root (or later upgrade) can conceal choices.
+    if ([panel, ...all(panel, '*')].some((node) => node.shadowRoot ||
+      node.localName.includes('-') || node.hasAttribute('is'))) return true;
     if (/legitimate interest|\bvendors?\b|third.party partners/i.test(panel.textContent)) return true;
-    if (panel.querySelector('[aria-expanded="false"], details:not([open]), [role="tabpanel"][hidden], iframe, [id*="vendor"], [class*="vendor"], [id*="legint"]')) return true;
+    if (panel.querySelector('[aria-expanded="false"], details:not([open]), [role="tabpanel"][hidden], iframe, embed, object, canvas, template[shadowrootmode], [id*="vendor"], [class*="vendor"], [id*="legint"]')) return true;
     return all(panel, CONTROLS).some((control) => !control.matches('input[type="checkbox"], [role="switch"], [role="checkbox"]'));
   }
   function inventory(panel, profile) {

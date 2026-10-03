@@ -16,7 +16,16 @@ test('browser packages reference real local assets and minimal APIs', async () =
       ...(manifest.background.scripts || [manifest.background.service_worker])];
     for (const file of files) await access(new URL(file, base));
     assert.match(await readFile(new URL('assets/TABLER-LICENSE', base), 'utf8'), /Permission is hereby granted/);
-    if (browser === 'chrome') assert.ok(manifest.background.service_worker);
-    else assert.ok(manifest.background.scripts);
+    if (browser === 'chrome') {
+      assert.deepEqual(manifest.background, { service_worker: 'background.js' });
+      for (const contentScript of manifest.content_scripts) {
+        assert.equal(contentScript.match_about_blank, true);
+      }
+    } else {
+      assert.deepEqual(manifest.background, { service_worker: 'background.js' });
+      for (const contentScript of manifest.content_scripts) {
+        assert.equal(Object.hasOwn(contentScript, 'match_about_blank'), false);
+      }
+    }
   }
 });

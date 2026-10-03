@@ -138,8 +138,50 @@ test('Cookiebot only saves after every optional native checkbox is off', async (
   assert.equal(clicks, 3);
   assert.equal(saves(), 1);
 });
+for (const [name, hostTag, mode, hostIsPanel] of [
+  ['open custom-element root', 'cookie-options', 'open', false],
+  ['closed custom-element root', 'cookie-options', 'closed', false],
+  ['open native-element root', 'div', 'open', false],
+  ['open root on the panel itself', 'div', 'open', true]
+]) {
+  test(`preferences refuse a supported light DOM panel mixed with ${name}`, async (t) => {
+    const f = fixture(t, cookiePanel());
+    const panel = f.doc.getElementById('CybotCookiebotDialog');
+    const host = hostIsPanel ? panel : panel.appendChild(f.doc.createElement(hostTag));
+    const shadow = host.attachShadow({ mode });
+    const optional = f.doc.createElement('input');
+    optional.type = 'checkbox';
+    optional.checked = true;
+    shadow.appendChild(optional);
+    assert.equal(host.shadowRoot, mode === 'closed' ? null : shadow);
+    let clicks = 0;
+    f.doc.addEventListener('click', () => clicks++);
+    optional.addEventListener('click', () => clicks++);
+    const saves = saveOnRemove(f, '#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection');
+    f.start();
+    await sleep(600);
+    assert.equal(clicks, 0);
+    assert.equal(saves(), 0);
+    assert.equal(f.events.length, 0);
+    assert.equal(optional.checked, true);
+    assert.ok(Array.from(panel.querySelectorAll('input')).every((control) => control.checked));
+  });
+}
 for (const [name, extra, prepare] of [
   ['unknown checkbox', '<input type="checkbox" checked>', () => {}],
+  ['uninitialised custom element', '<cookie-options></cookie-options>', () => {}],
+  ['custom panel element', '', (f) => {
+    const panel = f.doc.getElementById('CybotCookiebotDialog');
+    const custom = f.doc.createElement('cookie-preferences');
+    custom.id = panel.id;
+    custom.append(...panel.childNodes);
+    panel.replaceWith(custom);
+  }],
+  ['customised built-in element', '<div is="cookie-options"></div>', () => {}],
+  ['embedded frame', '<iframe title="Optional cookie choices"></iframe>', () => {}],
+  ['embedded object', '<object data="about:blank"></object>', () => {}],
+  ['embedded content', '<embed src="about:blank">', () => {}],
+  ['canvas controls', '<canvas></canvas>', () => {}],
   ['unknown state', '', (f) => { const c = f.doc.getElementById('CybotCookiebotDialogBodyLevelButtonMarketing'); c.indeterminate = true; }],
   ['disabled optional-on', '', (f) => { f.doc.getElementById('CybotCookiebotDialogBodyLevelButtonMarketing').disabled = true; }],
   ['disabled optional-off', '', (f) => { const c = f.doc.getElementById('CybotCookiebotDialogBodyLevelButtonMarketing'); c.disabled = true; c.checked = false; }],

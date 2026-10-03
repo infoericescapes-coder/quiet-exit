@@ -31,11 +31,11 @@ This invokes Apple's Safari web extension packager (or its older converter name)
 
 Open the generated Xcode project, choose your signing team for its app and extension targets, and build the appropriate macOS or iOS target. The generated project references `dist/safari`, so rebuild the web files after edits. Enable the extension in Safari settings and grant website access. On iPhone and iPad, install the containing iOS app first, then enable its Safari extension. Distribution needs the relevant Apple signing and store workflow.
 
-The Safari native wrapper and physical iPhone/iPad installation are not yet verified. WebKit DOM tests are useful engine checks, not a substitute for those installation tests.
+The generated Safari wrapper and containing app built, installed and launched on iPhone 17 Pro and iPad Pro 13-inch (M5) simulators running iOS 26.5. Native Safari fixture checks now cover direct rejection, preferences, delayed banners, switch persistence and bfcache on iPhone, plus direct rejection, preferences and delayed banners on iPad; physical-device behavior remains unverified. See the [iOS testing handoff](docs/IOS-TESTING.md) and the [3 October 2026 results](docs/IOS-TEST-RESULTS-2026-10-03.md).
 
 See the [MacminiM4 iPhone/iPad testing handoff](docs/IOS-TESTING.md) for Xcode setup, manual fixtures and a reusable kickoff prompt.
 
-The temporary unpacked extension has been verified in native macOS Safari, including popup rendering, saved toggle state, automatic rejection of a local test banner and counting. If you already loaded `dist/safari` as a temporary extension, rebuild and use **Safari Settings → Extensions → Quiet Exit → Reload** to apply updates.
+The temporary unpacked extension has also been verified in native macOS Safari, including popup rendering, saved toggle state, automatic rejection of a local test banner and counting. If you already loaded `dist/safari` as a temporary extension, rebuild and use **Safari Settings → Extensions → Quiet Exit → Reload** to apply updates.
 
 ## Behaviour
 

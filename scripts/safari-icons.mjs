@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile, access } from 'node:fs/promises';
+import { readdir, readFile, writeFile, access, lstat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -18,6 +18,7 @@ async function visit(directory) {
     if (!Array.isArray(contents.images) || !contents.images.length) {
       throw new Error(`No image slots in ${contentsPath}; inspect this Xcode template manually.`);
     }
+    const filenames = new Map();
     const plan = contents.images.map((entry, index) => {
       const dimensions = /^(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)$/.exec(entry.size || '');
       const scale = /^(\d+)x$/.exec(entry.scale || '1x');
@@ -26,8 +27,25 @@ async function visit(directory) {
       }
       const size = Number(dimensions[1]) * Number(scale[1]);
       if (!Number.isInteger(size) || size < 1 || size > 1024) throw new Error(`Unsupported icon size ${size}`);
-      return { entry, size, filename: `quiet-exit-${index}-${size}.png` };
+      const filename = Object.hasOwn(entry, 'filename') ? entry.filename : `quiet-exit-${index}-${size}.png`;
+      if (typeof filename !== 'string' || !/^[^/\\:\0]+\.png$/i.test(filename) || path.basename(filename) !== filename) {
+        throw new Error(`Unsafe AppIcon filename in ${contentsPath}: ${JSON.stringify(filename)}`);
+      }
+      const key = filename.toLowerCase();
+      if (filenames.has(key) && filenames.get(key) !== size) {
+        throw new Error(`Conflicting AppIcon sizes for ${filename} in ${contentsPath}`);
+      }
+      filenames.set(key, size);
+      return { entry, size, filename };
     });
+    // Never overwrite through a pre-existing link outside this asset catalogue.
+    for (const { filename } of plan) {
+      try {
+        if ((await lstat(path.join(location, filename))).isSymbolicLink()) {
+          throw new Error(`Unsafe AppIcon symlink: ${filename} in ${contentsPath}`);
+        }
+      } catch (error) { if (error.code !== 'ENOENT') throw error; }
+    }
     for (const { entry, size, filename } of plan) {
       await sharp(master).resize(size, size).removeAlpha().png().toFile(path.join(location, filename));
       entry.filename = filename;
