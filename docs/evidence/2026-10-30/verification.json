@@ -1,0 +1,65 @@
+{
+  "base_commit": "c3e696e09172637e381d7fc2eb6d289b10a6ab1a",
+  "verified_tree": "Uncommitted changes based on that commit, identified by source hashes. This is not a test of the unmodified base.",
+  "source_sha256": {
+    "engine.js": "d08398f31f4dca422fc908a7c2c4602fef9f5f2f08a6555bc688885e91bcc1e4",
+    "platforms.js": "5ed7b4cdf84dff59d1787911252e487d4576bdc58342b84fcc5ab78fc9bd6c92"
+  },
+  "independent_verification": {
+    "check_exit": 0,
+    "unit_tests": 105,
+    "package_exit": 0,
+    "consent_cases": {
+      "at": "2026-10-29T22:22:12.613Z",
+      "complete": true,
+      "lanes": {
+        "chromium": 19,
+        "webkit": 19,
+        "packaged-chromium": 4
+      },
+      "acceptClicks": 0,
+      "otherClicks": 0,
+      "countedCases": [
+        "chromium/best-desktop",
+        "chromium/best-mobile",
+        "webkit/best-desktop",
+        "webkit/best-mobile",
+        "packaged-chromium/best-desktop"
+      ],
+      "scope": "Synthetic local documents at intercepted URLs; DOM-engine and packaged Chromium evidence, not live-site or native Safari proof."
+    },
+    "negative_controls": {
+      "bypass_wording_guard_exit": 1,
+      "bypass_known_cookie_outcome_exit": 1,
+      "scope": "Temporary isolated copies; source unchanged"
+    }
+  },
+  "independent_review": {
+    "status": "no_functional_blockers",
+    "repaired": [
+      "hidden accessible wording",
+      "opaque action controls",
+      "native associated labels",
+      "generated wording",
+      "Best Lawyers replacement-dialog completion"
+    ],
+    "nonblocking_fixture_fonts": "fixed; primary gate rerun includes loaded-font assertions"
+  },
+  "primary_final_gate": {
+    "check_exit": 0,
+    "unit_tests": 105,
+    "consent_cases": 42,
+    "package_exit": 0,
+    "font_assertions_passed": true,
+    "source_sha256": {
+      "platforms.js": "5ed7b4cdf84dff59d1787911252e487d4576bdc58342b84fcc5ab78fc9bd6c92",
+      "engine.js": "d08398f31f4dca422fc908a7c2c4602fef9f5f2f08a6555bc688885e91bcc1e4"
+    }
+  },
+  "native_safari": {
+    "status": "awaiting_explicit_security_change_approval",
+    "reason": "Add Temporary Extension prompts to enable unsigned extensions and requires Touch ID/password authorisation. Prompt cancelled; Allow unsigned extensions remains off.",
+    "installed_new_version": false
+  },
+  "ios": "No fresh native/device evidence. Full Xcode packager unavailable on this host; existing release hold remains."
+}

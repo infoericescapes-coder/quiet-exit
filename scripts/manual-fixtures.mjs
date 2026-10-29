@@ -1,5 +1,6 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
+import { patterns, consentPatternPage } from '../tests/fixtures/consent-patterns.mjs';
 
 // Serves synthetic consent interfaces only. The installed extension supplies
 // its own content scripts, storage and popup; this page never injects the engine.
@@ -26,6 +27,12 @@ a{color:var(--ee-accent)}:focus-visible{outline:2px solid var(--ee-accent);outli
 </style></head><body><main>
 <p class="meta">Demo / Eric Escapes / Test fixture</p><h1>Quiet Exit manual fixtures</h1>
 <p>Use the installed Safari extension. This page records consent-control clicks and saved checkbox states. The popup count is separate. Reload for a clean run.</p>
+<p>Research regressions: <a href="/patterns?case=frandroid-accept-only">accept-only choices</a>,
+<a href="/patterns?case=drifted-reject">changed reject wording</a>,
+<a href="/patterns?case=opacity-label">contradictory accessible wording</a>,
+<a href="/patterns?case=opaque-action">opaque action</a>,
+<a href="/patterns?case=opaque-replacement">opaque replacement</a>,
+<a href="/patterns?case=shadow-only">shadow-only target</a>.</p>
 <label for="scenario">Scenario</label><select id="scenario">
 <option value="direct">Direct rejection</option><option value="late">Late banner (5 seconds)</option>
 <option value="preferences">Complete Cookiebot preferences</option><option value="unknown">Unknown optional control</option>
@@ -89,11 +96,15 @@ const fonts = new Map(['space-grotesk.ttf', 'ibm-plex-mono.ttf'].map(name =>
   [`/fonts/${name}`, new URL(`../extension/assets/fonts/${name}`, import.meta.url)]));
 const server = createServer(async (request, response) => {
   if (!['GET', 'HEAD'].includes(request.method)) { response.writeHead(405).end(); return; }
-  const pathname = new URL(request.url, 'http://localhost').pathname;
+  const requestURL = new URL(request.url, 'http://localhost');
+  const pathname = requestURL.pathname;
   let content;
   if (pathname === '/' || pathname === '/away') {
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     content = pathname === '/' ? page : away;
+  } else if (pathname === '/patterns' && patterns.includes(requestURL.searchParams.get('case'))) {
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    content = consentPatternPage(requestURL.searchParams.get('case'));
   } else if (fonts.has(pathname)) {
     try { content = await readFile(fonts.get(pathname)); }
     catch { response.writeHead(404).end(); return; }

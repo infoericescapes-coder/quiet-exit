@@ -2,7 +2,7 @@
 
 **Cookie consent, declined.** By Eric Escapes.
 
-Quiet Exit is a browser extension that declines supported cookie consent banners. It clicks a rejection control, or uses a supported preferences layout to turn optional choices off before saving. It never treats hiding a banner as consent rejection.
+Quiet Exit is a browser extension that performs supported cookie-refusal actions. It clicks an explicitly labelled rejection control, or uses a supported preferences layout to turn optional choices off before saving. Hiding a banner alone is never sufficient to record completion.
 
 This repository contains the first development version. Site configurations vary, and no extension can safely promise to reject every banner. Unknown or ambiguous preferences are left for you to handle.
 
@@ -40,9 +40,11 @@ The temporary unpacked extension has also been verified in native macOS Safari, 
 ## Behaviour
 
 - Direct rejection rules for common consent managers, with a conservative English fallback inside identifiable consent dialogs.
+- Every reject, manage and save control needs affirmative supported wording. Familiar IDs/classes cannot override accepting, neutral, contradictory or opaque wording. Accept-only and subscription choices remain untouched.
+- A narrow Best Lawyers adapter uses its exact essential-only controls and additionally requires the page-visible consent value `bl_cookie_policy_V4=0` before counting completion.
 - Supported preferences flows open the panel, verify optional controls, turn them off and recheck before saving. Unsupported controls, unknown categories, vendor/legitimate-interest sections and incomplete layouts prevent saving.
 - A debounced `MutationObserver` handles late banners. Attempts are bounded; disabling the extension stops pending work.
-- The popup stores the enable switch and a local count. A count means a deliberate rejection action was followed by disappearance of that consent interface. It does not certify the site's server-side compliance or prove all tracking stopped.
+- The popup stores the enable switch and a local count. A count means a deliberate refusal action was followed by disappearance of the relevant consent interface; the Best Lawyers adapter also checks its known consent marker. Other profiles do not verify stored consent. No count certifies server-side compliance or proves all tracking stopped.
 - No accepting optional cookies, remote rules, analytics, cookies API, or network interception. Existing cookies are not erased. Essential cookies may still be used.
 
 See [coverage and limitations](docs/COVERAGE.md) for the exact implementation scope and [privacy](PRIVACY.md) for permissions and storage.
@@ -55,7 +57,7 @@ npm run check
 npm run package
 ```
 
-`npm test` runs unit and adversarial fixture checks. `npm run test:browser` runs the DOM engine in Chromium and WebKit, then loads the real Chrome package to exercise content scripts, its service worker, local counting and the popup switch. Popup screenshots are written to `artifacts/` at narrow and wide viewport sizes. Firefox is outside the build scope.
+`npm test` runs unit and adversarial fixture checks. `npm run test:browser` runs the DOM engine in Chromium and WebKit, then loads the real Chrome package to exercise content scripts, its service worker, local counting and the popup switch. `npm run test:consent` exercises research-derived consent-state patterns in Chromium, WebKit and the loaded Chrome package, including positive controls and misleading or accept-only interfaces. These isolated fixtures do not contact the production sites. Results and popup screenshots are written to `artifacts/`. Firefox is outside the build scope.
 
 `npm run package` writes browser ZIPs into `artifacts/`. The Safari ZIP contains web resources, not a signed installable Apple app. Store upload, signing and publication are separate release steps.
 
@@ -66,3 +68,5 @@ npm run package
 Fonts are bundled with their licences. Brand assets are from the [Eric Escapes brand kit](https://www.ericescapes.com/brand/). Their inclusion does not grant a separate licence to the Eric Escapes identity.
 
 Platform references: [Chrome content scripts](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts), [WebExtension background scripts](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background), and [Apple Safari packaging](https://developer.apple.com/documentation/safariservices/packaging-a-web-extension-for-safari).
+
+The [development contract](AGENTS.md) combines the consent invariants with the independent implementation, verification and review workflow. The [30 October research integration](docs/CONSENT-HARDENING-2026-10-30.md) records the Super Agent findings, their application here, and current evidence separately from the historical native/TestFlight results above. Version 0.1.3 is the current source revision; no new TestFlight or App Store release is implied.
