@@ -57,9 +57,25 @@
     }
   },
   "native_safari": {
-    "status": "awaiting_explicit_security_change_approval",
-    "reason": "Add Temporary Extension prompts to enable unsigned extensions and requires Touch ID/password authorisation. Prompt cancelled; Allow unsigned extensions remains off.",
+    "status": "blocked_on_local_authentication",
+    "user_authorised_temporary_testing": true,
+    "reason": "Safari requires local Touch ID/password authentication. User is away; prompt cancelled and Allow unsigned extensions observed off. No full Xcode is installed locally. Alternate host readiness remains unverified.",
     "installed_new_version": false
   },
-  "ios": "No fresh native/device evidence. Full Xcode packager unavailable on this host; existing release hold remains."
+  "ios": "No fresh native/device evidence. Full Xcode packager unavailable on this host; existing release hold remains.",
+  "native_safari_page_engine": {
+    "status": "passed_in_private_window",
+    "source_commit": "73d29ee10b4492cfad82107312f3794189f8ad26",
+    "safari_version": "27.2",
+    "safari_build": "22625.2.8.11.9",
+    "cases": 16,
+    "passed": 16,
+    "started_at": "2026-10-29T23:15:45.610Z",
+    "finished_at": "2026-10-29T23:17:22.030Z",
+    "scope": "Native Safari page-engine evidence only. Actual source scripts run in local synthetic pages; no installed extension, popup, storage, permission, Best Lawyers hostname or live-site proof. Other installed extensions are not claimed disabled; per-case no-engine baselines detect observable interference only.",
+    "normal_window_control": "15/16 passed. drifted-manage baseline recorded one acceptance before Quiet Exit started; that case did not start the engine. The responsible external component was not identified. The failure was retained.",
+    "normal_evidence": "native-safari-engine-normal-profile.json",
+    "private_evidence": "native-safari-engine-private.json",
+    "harness": "native-safari-engine-harness.mjs"
+  }
 }
