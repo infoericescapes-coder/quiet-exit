@@ -1,0 +1,348 @@
+{
+  "version": 1,
+  "observedAtUtc": "2026-10-30T17:07:11.376546Z",
+  "scope": "Read-only identity and web-resource audit of the existing Xcode 27.1 Debug simulator build.",
+  "sourceCommit": "21f1d4f0eba5feab06fe039e08cae6e8a6b398f2",
+  "sourceTree": "115cdefbbdf9b2eb16ce57f0682866232b666f17",
+  "priorTestedCommit": "e43452fd1f2192b395f00b99a20c47de14a7c317",
+  "priorTestedTree": "115cdefbbdf9b2eb16ce57f0682866232b666f17",
+  "committedTreesIdentical": true,
+  "worktreeCleanAtObservation": false,
+  "dirtyPathsAtObservation": [
+    {
+      "status": " M",
+      "path": "FOUNDATION-HANDOFF.md"
+    },
+    {
+      "status": " M",
+      "path": "docs/IOS-TEST-RESULTS-2026-10-31.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/TESTFLIGHT-2026-10-31.md"
+    }
+  ],
+  "productPathsDirtyAtObservation": false,
+  "developerDirectoryReportedByPrimary": "/Users/eric/Applications/QuietExit-Xcode-27.1/Xcode.app/Contents/Developer",
+  "bundles": [
+    {
+      "path": "artifacts/ios-2026-10-31/DerivedData27.1/Build/Products/Debug-iphonesimulator/Quiet Exit.app",
+      "identity": {
+        "CFBundleIdentifier": "com.ericescapes.quietexit",
+        "CFBundleShortVersionString": "0.1.3",
+        "CFBundleVersion": "2",
+        "MinimumOSVersion": "15.4",
+        "DTXcode": "2710",
+        "DTXcodeBuild": "27A9275",
+        "DTSDKName": "iphonesimulator27.1",
+        "DTSDKBuild": "24A94232",
+        "DTPlatformName": "iphonesimulator",
+        "DTPlatformVersion": "27.1",
+        "ITSAppUsesNonExemptEncryption": null
+      },
+      "infoPlistSha256": "e7aa88f9e834f0ba5f095d4e30cae20315c69b3ede8a9bcbc7d1a34cbd7cf5f2",
+      "executableSha256": "6b79a8142364ef33caa4e225c2c425289466a13a5a362bcb3e1cb96c136bc467"
+    },
+    {
+      "path": "artifacts/ios-2026-10-31/DerivedData27.1/Build/Products/Debug-iphonesimulator/Quiet Exit.app/PlugIns/Quiet Exit Extension.appex",
+      "identity": {
+        "CFBundleIdentifier": "com.ericescapes.quietexit.Extension",
+        "CFBundleShortVersionString": "0.1.3",
+        "CFBundleVersion": "2",
+        "MinimumOSVersion": "15.4",
+        "DTXcode": "2710",
+        "DTXcodeBuild": "27A9275",
+        "DTSDKName": "iphonesimulator27.1",
+        "DTSDKBuild": "24A94232",
+        "DTPlatformName": "iphonesimulator",
+        "DTPlatformVersion": "27.1",
+        "ITSAppUsesNonExemptEncryption": null
+      },
+      "infoPlistSha256": "66bd674cb675be37d1c855e6aea319f04d117ca5814e5679c3b6a68bd7729623",
+      "executableSha256": "cac1a94e6992d78db44d1e8b39364a8ae0d0c4129cccd6126301cc91e2feddb3"
+    }
+  ],
+  "webResourceMapping": "dist/safari/<relativePath> maps directly to Quiet Exit Extension.appex/<relativePath>, discovered from the existing bundle.",
+  "resourceCount": 34,
+  "resources": [
+    {
+      "relativePath": "assets/README.md",
+      "bytes": 1737,
+      "distSha256": "4ba06a1345f27602c4653828c55a2baac9567c7056237e4e3b85f46785c95dc8",
+      "bundleSha256": "4ba06a1345f27602c4653828c55a2baac9567c7056237e4e3b85f46785c95dc8",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/TABLER-LICENSE",
+      "bytes": 1073,
+      "distSha256": "d5a3f948ae5cb95bfc4d2f767ef2bf6a778815b0ddb2d1c48037744cf636518e",
+      "bundleSha256": "d5a3f948ae5cb95bfc4d2f767ef2bf6a778815b0ddb2d1c48037744cf636518e",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/ee-monogram-white.svg",
+      "bytes": 386,
+      "distSha256": "7ca05237a29dd21588212111bbf672c5e357f5a53069726d0b7b5914bbdf4b9a",
+      "bundleSha256": "7ca05237a29dd21588212111bbf672c5e357f5a53069726d0b7b5914bbdf4b9a",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/fonts/ibm-plex-mono-OFL.txt",
+      "bytes": 4362,
+      "distSha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f",
+      "bundleSha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/fonts/ibm-plex-mono.ttf",
+      "bytes": 135580,
+      "distSha256": "6a3412f058c7d8dfd9170c41e85ade48e5156ecb89356110ca57a0a27734af46",
+      "bundleSha256": "6a3412f058c7d8dfd9170c41e85ade48e5156ecb89356110ca57a0a27734af46",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/fonts/space-grotesk-OFL.txt",
+      "bytes": 4401,
+      "distSha256": "18a4de52385f6b988782639d5d0cc1326e5a8c2de9a7f01d7b20d9aedcc60943",
+      "bundleSha256": "18a4de52385f6b988782639d5d0cc1326e5a8c2de9a7f01d7b20d9aedcc60943",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/fonts/space-grotesk.ttf",
+      "bytes": 136676,
+      "distSha256": "acad6de1fc93436f5c0f1f4137751ef04f1aea3063e7036535970ffcfbd79f72",
+      "bundleSha256": "acad6de1fc93436f5c0f1f4137751ef04f1aea3063e7036535970ffcfbd79f72",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/icon-128.png",
+      "bytes": 3085,
+      "distSha256": "5206328962e29e74b3d3e1ddad52aa9e76cb7c01ac9b255bd43836e713b09fd0",
+      "bundleSha256": "5206328962e29e74b3d3e1ddad52aa9e76cb7c01ac9b255bd43836e713b09fd0",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/icon-16.png",
+      "bytes": 432,
+      "distSha256": "3283e5781a6e70a33ad55978bb2419ce9890ce789bc84f28c23f1fc1c834a57c",
+      "bundleSha256": "3283e5781a6e70a33ad55978bb2419ce9890ce789bc84f28c23f1fc1c834a57c",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/icon-256.png",
+      "bytes": 7058,
+      "distSha256": "b41ac0e52f0419d77c92bc95fa2e9063188b69142d337c3e5f50055ccddb1058",
+      "bundleSha256": "b41ac0e52f0419d77c92bc95fa2e9063188b69142d337c3e5f50055ccddb1058",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/icon-32.png",
+      "bytes": 779,
+      "distSha256": "902691262598534394c25438a3666dc0d2274609055fbe441ac07dee5c27f6a0",
+      "bundleSha256": "902691262598534394c25438a3666dc0d2274609055fbe441ac07dee5c27f6a0",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/icon-48.png",
+      "bytes": 1105,
+      "distSha256": "32f98b67e1cefe077e22d15aefe31e2e0886fb8015304efc97f858213020accc",
+      "bundleSha256": "32f98b67e1cefe077e22d15aefe31e2e0886fb8015304efc97f858213020accc",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/icon-512.png",
+      "bytes": 18451,
+      "distSha256": "68b339cb5cee0977e294897b1a7b4a1038af394c9ee9632a30e774032f081e7a",
+      "bundleSha256": "68b339cb5cee0977e294897b1a7b4a1038af394c9ee9632a30e774032f081e7a",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/icon-64.png",
+      "bytes": 1557,
+      "distSha256": "74a4001e02ed1a68c7c41060f578bc621d43ee829573397d26027142b37e63b7",
+      "bundleSha256": "74a4001e02ed1a68c7c41060f578bc621d43ee829573397d26027142b37e63b7",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/icon-96.png",
+      "bytes": 2222,
+      "distSha256": "3aadfa165f90dceca67fa800d66b173c59cf589a1b451a5612d5cd61b68663ec",
+      "bundleSha256": "3aadfa165f90dceca67fa800d66b173c59cf589a1b451a5612d5cd61b68663ec",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/monogram-white-512.png",
+      "bytes": 6837,
+      "distSha256": "7c8a117b579dfff3dc0a87abee4bb63f1afaa31cf1be68fed58571d0328e7432",
+      "bundleSha256": "7c8a117b579dfff3dc0a87abee4bb63f1afaa31cf1be68fed58571d0328e7432",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/toolbar-chrome-16.png",
+      "bytes": 450,
+      "distSha256": "68c8f1b3edc192edf3bb163a839dcaf91b2dcbe2cd8fdcac442c3605c7400fd8",
+      "bundleSha256": "68c8f1b3edc192edf3bb163a839dcaf91b2dcbe2cd8fdcac442c3605c7400fd8",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/toolbar-chrome-19.png",
+      "bytes": 603,
+      "distSha256": "5e6053fcadd9489480e0d11cda4043a686892dfdc6a0c23f8321db710e961a04",
+      "bundleSha256": "5e6053fcadd9489480e0d11cda4043a686892dfdc6a0c23f8321db710e961a04",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/toolbar-chrome-32.png",
+      "bytes": 873,
+      "distSha256": "7e9276dc469633de511e1b2d520f0803458c1a234e131a77229e3a97b7504b2d",
+      "bundleSha256": "7e9276dc469633de511e1b2d520f0803458c1a234e131a77229e3a97b7504b2d",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/toolbar-chrome-38.png",
+      "bytes": 1022,
+      "distSha256": "8394f6cae841be0ce8cf9e272da9032923e120d69095ff4260cc0b8fe82a32a4",
+      "bundleSha256": "8394f6cae841be0ce8cf9e272da9032923e120d69095ff4260cc0b8fe82a32a4",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/toolbar-chrome-48.png",
+      "bytes": 1222,
+      "distSha256": "ed3c8a13fce41175cde3e7cff7e47fe18fe4c1c50dbeac003ef9897f8c349229",
+      "bundleSha256": "ed3c8a13fce41175cde3e7cff7e47fe18fe4c1c50dbeac003ef9897f8c349229",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/toolbar-safari-16.png",
+      "bytes": 340,
+      "distSha256": "c0b096a3b0773448423b08800603c4cdd46beead61a8d265e0d41637ac1aa49a",
+      "bundleSha256": "c0b096a3b0773448423b08800603c4cdd46beead61a8d265e0d41637ac1aa49a",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/toolbar-safari-19.png",
+      "bytes": 440,
+      "distSha256": "fb156b55c88b2604a98ae3a09095bf1e99286dc50e45b42e2dfedcfd861a1688",
+      "bundleSha256": "fb156b55c88b2604a98ae3a09095bf1e99286dc50e45b42e2dfedcfd861a1688",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/toolbar-safari-32.png",
+      "bytes": 651,
+      "distSha256": "320ca69a352e20e34d841531e9602e6bcd0afa132aa3e6f62fbe8cccecf01da7",
+      "bundleSha256": "320ca69a352e20e34d841531e9602e6bcd0afa132aa3e6f62fbe8cccecf01da7",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/toolbar-safari-38.png",
+      "bytes": 772,
+      "distSha256": "35360251a04e94881c4dae9ef7614a566d888e7dd4ee8e4f635a47890eb4da83",
+      "bundleSha256": "35360251a04e94881c4dae9ef7614a566d888e7dd4ee8e4f635a47890eb4da83",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "assets/toolbar-safari-48.png",
+      "bytes": 938,
+      "distSha256": "7fc0eefb390109e0774c4b9855e5c6325aee064df11aa92498ff4ccf4d9bc089",
+      "bundleSha256": "7fc0eefb390109e0774c4b9855e5c6325aee064df11aa92498ff4ccf4d9bc089",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "background.js",
+      "bytes": 2801,
+      "distSha256": "d492472f98bd03ca48039ab486a6681e87dc243821c91fdc10e0b01721282bb6",
+      "bundleSha256": "d492472f98bd03ca48039ab486a6681e87dc243821c91fdc10e0b01721282bb6",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "content/content.js",
+      "bytes": 3204,
+      "distSha256": "a5bf68410c7931325face059d2a56780c82598ecdb0c809745514b99ab323270",
+      "bundleSha256": "a5bf68410c7931325face059d2a56780c82598ecdb0c809745514b99ab323270",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "content/engine.js",
+      "bytes": 20062,
+      "distSha256": "d08398f31f4dca422fc908a7c2c4602fef9f5f2f08a6555bc688885e91bcc1e4",
+      "bundleSha256": "d08398f31f4dca422fc908a7c2c4602fef9f5f2f08a6555bc688885e91bcc1e4",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "content/platforms.js",
+      "bytes": 2172,
+      "distSha256": "5ed7b4cdf84dff59d1787911252e487d4576bdc58342b84fcc5ab78fc9bd6c92",
+      "bundleSha256": "5ed7b4cdf84dff59d1787911252e487d4576bdc58342b84fcc5ab78fc9bd6c92",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "manifest.json",
+      "bytes": 1465,
+      "distSha256": "0d238eb7299a95da1697aff60156a00d4f8c1d53027373647ccc2a2bbcfdc6d5",
+      "bundleSha256": "0d238eb7299a95da1697aff60156a00d4f8c1d53027373647ccc2a2bbcfdc6d5",
+      "matches": true,
+      "matchesExtensionSource": null
+    },
+    {
+      "relativePath": "popup/popup.css",
+      "bytes": 3470,
+      "distSha256": "27a82b885bbb5d2ab4d44c110ba8933bd06748159d35fd779174f455aaeabfd7",
+      "bundleSha256": "27a82b885bbb5d2ab4d44c110ba8933bd06748159d35fd779174f455aaeabfd7",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "popup/popup.html",
+      "bytes": 1670,
+      "distSha256": "248727f86038b0627c5c250ad808bfad38891dac64b1b5e72ab41ae15d125a41",
+      "bundleSha256": "248727f86038b0627c5c250ad808bfad38891dac64b1b5e72ab41ae15d125a41",
+      "matches": true,
+      "matchesExtensionSource": true
+    },
+    {
+      "relativePath": "popup/popup.js",
+      "bytes": 3001,
+      "distSha256": "e18f5406dcc6cd59b55e9e7701ff3f366c038aa90fb5e61f626b69a01ce79e3d",
+      "bundleSha256": "e18f5406dcc6cd59b55e9e7701ff3f366c038aa90fb5e61f626b69a01ce79e3d",
+      "matches": true,
+      "matchesExtensionSource": true
+    }
+  ],
+  "resourceMismatches": [],
+  "limitations": [
+    "Audits the existing Debug-iphonesimulator bundles only; no build, install, launch or UI action was performed.",
+    "Bundle DT fields identify recorded build toolchain/SDK metadata; first-launch, Gatekeeper and build-success observations are supplied separately by the primary.",
+    "Matching resources and identity do not establish native runtime behaviour, physical-device support, distribution signing or App Store Connect acceptance.",
+    "The worktree has the explicitly listed documentation changes; no clean-worktree claim is made."
+  ]
+}

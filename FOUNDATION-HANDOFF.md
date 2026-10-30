@@ -5,22 +5,22 @@ Updated 31 October 2026 (Australia/Sydney). Start here for the current native iO
 ## Start from the latest work
 
 - Repository: [infoericescapes-coder/quiet-exit](https://github.com/infoericescapes-coder/quiet-exit).
-- Latest feature branch: **`codex/consent-outcome-hardening`**, [PR #2](https://github.com/infoericescapes-coder/quiet-exit/pull/2), targeting `codex/initial-extension`.
+- Current app branch: **`codex/initial-extension`**. [PR #2](https://github.com/infoericescapes-coder/quiet-exit/pull/2) merged the reviewed hardening, Xcode 27 fixes and current native evidence at `21f1d4f0eba5feab06fe039e08cae6e8a6b398f2`. Its tree is identical to tested feature head `e43452fd1f2192b395f00b99a20c47de14a7c317`.
 - The current simulator test run started at `20d4f1897902aa4e086510409814ea7af6b1f498`, with the reviewed Xcode 27 packaging/release-preflight fixes described in the dated report. Consent scripts were unchanged. Fetch the latest branch and record the actual SHA used for testing; inspect current PR state before merging.
-- The underlying app branch is `codex/initial-extension`, with [draft PR #1](https://github.com/infoericescapes-coder/quiet-exit/pull/1) targeting `main`. Neither PR was merged when this handoff was prepared; `main` contains only the repository introduction. Recheck their live states before any merge.
+- [PR #1](https://github.com/infoericescapes-coder/quiet-exit/pull/1) from the app branch to `main` remains open and draft with the physical-device/public-release hold. This was verified after PR #2 merged. Recheck live state before a further merge.
 
 Read [AGENTS.md](AGENTS.md), [README.md](README.md), [coverage](docs/COVERAGE.md), the [30 October integration report](docs/CONSENT-HARDENING-2026-10-30.md), and the [native iOS procedure](docs/IOS-TESTING.md). The latter opens with **historical 0.1.2 results**; use its procedure while testing current 0.1.3 source afresh.
 
 For a fresh checkout, choose an unused destination:
 
 ```sh
-git clone --branch codex/consent-outcome-hardening https://github.com/infoericescapes-coder/quiet-exit.git quiet-exit
+git clone --branch codex/initial-extension https://github.com/infoericescapes-coder/quiet-exit.git quiet-exit
 cd quiet-exit
 git status --short
 git rev-parse HEAD
 ```
 
-For an existing checkout, inspect its branch, changes and native project before fetching and switching to the latest feature branch. Preserve local work. `safari/`, `dist/` and `artifacts/` are ignored: a clean Git status does not mean the existing native wrapper or signing configuration is disposable, and a fresh clone will not contain them.
+For an existing checkout, inspect its branch, changes and native project before fetching and switching to the current app branch. Preserve local work. `safari/`, `dist/` and `artifacts/` are ignored: a clean Git status does not mean the existing native wrapper or signing configuration is disposable, and a fresh clone will not contain them.
 
 ## What has passed
 
@@ -106,12 +106,16 @@ Reload between cases, compare popup **count deltas**, and do not manually press 
 
 [3 October results](docs/IOS-TEST-RESULTS-2026-10-03.md) concern **0.1.2**: native simulator build/install/popup/refusal/preferences/persistence checks passed, and iPhone bfcache checks passed. Disable-during-queue timing was inconclusive; the full native negative matrix was incomplete. Physical iPhone installation succeeded but launch was blocked by a locked device; physical Safari behaviour was not verified, and physical iPad was untested.
 
-App Store Connect access from this Mac was verified with HTTP 200 for app `6818695484`, bundle `com.ericescapes.quietexit`; existing build 1 is `VALID` and unexpired. Eric explicitly authorised a new TestFlight build **from this MacBook Air after testing**, superseding Foundation's original Mac-mini-only upload restriction. The existing distribution key was supplied locally and matched the pinned certificate; existing per-bundle App Store profiles were verified. No keys belong in Git or chat. Follow the reviewed disposable-keychain release script and require fresh ASC version/build/processing readback before reporting success. Record the actual release outcome separately; an unused build number must be checked at execution.
+App Store Connect access from this Mac was verified with HTTP 200 for app `6818695484`, bundle `com.ericescapes.quietexit`; build 2 (0.1.3) is now `VALID`, unexpired and available in the existing internal TestFlight group; build 1 remains present. Eric explicitly authorised a new TestFlight build **from this MacBook Air after testing**, superseding Foundation's original Mac-mini-only upload restriction. The existing distribution key was supplied locally and matched the pinned certificate; existing per-bundle App Store profiles were verified. No keys belong in Git or chat. Follow the reviewed disposable-keychain release script and require fresh ASC version/build/processing readback before reporting success. Record the actual release outcome separately; an unused build number must be checked at execution.
 
-Keep the physical-device/public-release hold. PR #2 merge authority remains conditional on checks and the approved installed-extension tests; PR #1 remains the separate draft to `main`. Inspect current-head CI/reviews and Eric's instructions before merging. This document does not itself grant publication authority or waive the remaining device checks.
+Keep the physical-device/public-release hold. PR #2 was merged after independent review, the installed iPhone simulator checks and both current-head GitHub checks passed. PR #1 remains the separate draft to `main`. Inspect current-head CI/reviews and Eric's instructions before any further merge. This document does not itself grant publication authority or waive the remaining device checks.
 
 ## Workflow and return report
 
 Follow Foundation's applicable operating instructions alongside the repository contract, preserving independent implementation, behavioural verification and final review. Report actual instruction conflicts instead of silently replacing either workflow. Hyper Send was installed in the originating Codex environment; it is not bundled in Git and should not be assumed installed on Foundation's host. The native procedures here do not require it.
 
 Return a dated report with the tested commit/dirty status, Xcode/macOS/iOS versions, scheme/destination, app/extension versions and resource identity, permission/setup steps, per-case observed states and count deltas, screenshots/logs, fixes and their rechecks, and unresolved blockers. Distinguish automated engine, loaded Chrome package, native Safari page engine, installed simulator extension and physical-device evidence. Link the report from this handoff, inspect CI/reviews for the final pushed head, and stop task-owned fixture servers afterward.
+
+## Local TestFlight release
+
+See [31 October release record](docs/TESTFLIGHT-2026-10-31.md) for the actual upload state and next steps. The first 0.1.3 (2) upload was rejected under Xcode 27.2 (27B52). The separate Xcode 27.1 build passed bounded installed-simulator upgrade/refusal checks and is now **VALID / IN_BETA_TESTING** as 0.1.3 (2), assigned to **Eric Internal Testing** with What-to-Test instructions. Foundation can start physical-device checks from this build; build 2 is used and must not be uploaded again. The global Xcode 27.2 installation remains selected. Follow the linked release record for exact identifiers, readbacks, signing audit and cleanup.

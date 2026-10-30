@@ -72,6 +72,6 @@ This is an installed live-site result corroborated by persisted native consent s
 
 Still required before full native release sign-off: physical iPhone/iPad Safari behaviour, current iPad simulator coverage, and the independent page-visible-cookie portion of the Best Lawyers procedure described above. Localhost cases alone cannot validate that hostname-bound adapter. These results do not prove universal stored refusal or stopped tracking.
 
-At completion of these simulator checks, no new distribution upload had occurred. Eric subsequently authorised building and uploading 0.1.3 from this MacBook Air after testing and supplied the existing matching distribution key. Release execution/readback will be recorded separately; the local simulator build number 1 must not be confused with a new TestFlight build. Physical-device/public-release sign-off remains outstanding.
+At completion of these simulator checks, no new distribution upload had occurred. Eric subsequently authorised building and uploading 0.1.3 from this MacBook Air after testing and supplied the existing matching distribution key. [Release execution/readback](TESTFLIGHT-2026-10-31.md) is recorded separately; the local simulator build number 1 must not be confused with a new TestFlight build. Physical-device/public-release sign-off remains outstanding.
 
 Task-owned fixture servers on ports 8765, 8767 and 8768 were stopped after testing. Both simulator extensions were left paused (iPhone 18 Pro count 7; Duo count 8 after the live test).

@@ -153,3 +153,11 @@ The following 25 PNGs are copied unchanged. Their filenames label the captured s
 ## Instrument self-check scope
 
 The two committed instrument copies were replayed in an isolated temporary repository-shaped directory at their required artifact paths, with byte-identical reference fixtures, source files and fonts. Both `--self-check` commands exited 0. The matrix check covered browser-script syntax, exact pattern HTML, fonts, absent engine endpoint, missing baseline and invalid/cross-origin evidence rejection. The lifecycle check covered exact direct markup, browser-script syntax, fresh-run redirects, navigation documents without no-store, absent history automation/engine endpoint and rejected invalid/cross-origin events. These are implementer instrument checks, not independent verification and not new native tests. They wrote no result evidence and did not touch the running instruments.
+
+## Separate Xcode 27.1 fallback smoke phase
+
+[Xcode 27.1 / build-2 simulator smoke evidence](xcode27.1/README.md) preserves the later bounded upgrade/state/direct OFF→ON checks on both existing iOS 27.2 simulators. Its eight event files, nine screenshots, build identity and capture metadata are separate from this folder's original-phase counts and full SDK 27.2/build-1 suite. It does not claim a broad matrix or lifecycle rerun.
+
+## TestFlight release receipt
+
+The separate [release receipt](testflight-release.json) records the accepted Xcode 27.1 build 0.1.3 (2), internal-group and What-to-Test readbacks, signing summary and cleanup. It does not extend the original native test matrix to physical devices. See the [release report](../../TESTFLIGHT-2026-10-31.md).
