@@ -2,6 +2,8 @@
 
 **Cookie consent, declined.** By Eric Escapes.
 
+**Foundation pickup:** start with [FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md) for the latest branch, verified results and remaining 0.1.3 iOS testing.
+
 Quiet Exit is a browser extension that performs supported cookie-refusal actions. It clicks an explicitly labelled rejection control, or uses a supported preferences layout to turn optional choices off before saving. Hiding a banner alone is never sufficient to record completion.
 
 This repository contains the first development version. Site configurations vary, and no extension can safely promise to reject every banner. Unknown or ambiguous preferences are left for you to handle.

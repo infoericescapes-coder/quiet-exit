@@ -1,5 +1,7 @@
 # iPhone and iPad Safari testing on MacminiM4
 
+**Current 0.1.3 pickup:** read [FOUNDATION-HANDOFF.md](../FOUNDATION-HANDOFF.md) first for the latest branch, passed checks and remaining native tests. The 0.1.2 results and kickoff prompt below are historical; retain the setup procedure while testing the current source afresh.
+
 This is the version 0.1.2 development handoff for the `codex/initial-extension` branch. Current run evidence is appended below; the procedure remains useful for continuing the native test matrix. The earlier preparation-host statement and 52-test count in the README-era handoff are superseded by the current results. A Safari resource ZIP is not an installable iOS app.
 
 ## Current run status, 3 October 2026
