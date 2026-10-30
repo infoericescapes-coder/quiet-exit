@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "device": "iphone-duo",
+  "run": "a6ad3443-a3ce-4493-9f06-8ab2748ffe7e",
+  "documentId": "63d95fe2-6885-45ee-864d-d295007e7342",
+  "eventId": "e36991ee-be78-4884-ae2a-67c4bb812067",
+  "sequence": 9,
+  "at": "2026-10-30T16:20:56.876Z",
+  "kind": "queue-fired",
+  "persisted": null,
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Mobile/15E148 Safari/604.1",
+  "state": {
+    "accept": 0,
+    "reject": 1,
+    "inserted": 1,
+    "queueAt": "2026-10-30T16:20:26.873Z",
+    "dueAt": "2026-10-30T16:20:56.873Z",
+    "insertedAt": "2026-10-30T16:18:41.201Z",
+    "pageshowPersisted": false,
+    "pageshowCount": 1,
+    "surfacePresent": false,
+    "visibility": "visible",
+    "navigationType": "navigate"
+  },
+  "sources": {
+    "scripts/manual-fixtures.mjs": "ea729ace10feb5e9bf0785329e291c5d9a8c0269af5ad1405d8d8d5571686eef",
+    "artifacts/ios-2026-10-31/native-lifecycle-harness.mjs": "431bdc0b96d4d18947f0ea1e20827517e04144ce5b6f8e8972ad38d3f879c3cb"
+  },
+  "receivedAt": "2026-10-30T16:20:56.881Z",
+  "file": "lifecycle-iphone-duo-a6ad3443-a3ce-4493-9f06-8ab2748ffe7e-63d95fe2-6885-45ee-864d-d295007e7342-9-e36991ee-be78-4884-ae2a-67c4bb812067.json",
+  "scope": "Top-level local synthetic lifecycle observations supplied by the installed extension. Extension switch, permission, popup count and package identity require separate native evidence. No automatic paused/enabled verdict, engine injection, extension API, consent SDK, cookie or storage access."
+}

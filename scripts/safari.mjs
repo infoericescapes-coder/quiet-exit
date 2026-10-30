@@ -36,11 +36,16 @@ async function stampVersions(directory) {
     const location = path.join(directory, item.name);
     if (item.isDirectory()) {
       await stampVersions(location);
-    } else if (item.name === 'project.pbxproj') {
+    } else if (item.name === 'project.pbxproj' || item.name === 'project.xcproj') {
       const project = await readFile(location, 'utf8');
-      const marketing = /^([\t ]*MARKETING_VERSION\s*=\s*)[^;\r\n]+;/gm;
-      const build = /^([\t ]*CURRENT_PROJECT_VERSION\s*=\s*)[^;\r\n]+;/gm;
-      const iosDeployment = /^([\t ]*IPHONEOS_DEPLOYMENT_TARGET\s*=\s*)[^;\r\n]+;/gm;
+      // Xcode 27's packager emits quoted settings in project.xcproj, with
+      // trailing commas. Stamp in place rather than parsing/reformatting it.
+      const settingPattern = setting => item.name === 'project.xcproj'
+        ? new RegExp(`^([\\t ]*"${setting}"[\\t ]*:[\\t ]*")[^"\\r\\n]*(")`, 'gm')
+        : new RegExp(`^([\\t ]*${setting}\\s*=\\s*)[^;\\r\\n]+(;)`, 'gm');
+      const marketing = settingPattern('MARKETING_VERSION');
+      const build = settingPattern('CURRENT_PROJECT_VERSION');
+      const iosDeployment = settingPattern('IPHONEOS_DEPLOYMENT_TARGET');
       if (!marketing.test(project) || !build.test(project)) {
         throw new Error(`Missing native version settings in ${location}; inspect the generated Xcode project.`);
       }
@@ -49,9 +54,9 @@ async function stampVersions(directory) {
       }
       marketing.lastIndex = build.lastIndex = iosDeployment.lastIndex = 0;
       await writeFile(location, project
-        .replace(marketing, (_, prefix) => `${prefix}${version};`)
-        .replace(build, (_, prefix) => `${prefix}1;`)
-        .replace(iosDeployment, (_, prefix) => `${prefix}15.4;`));
+        .replace(marketing, (_, prefix, suffix) => `${prefix}${version}${suffix}`)
+        .replace(build, (_, prefix, suffix) => `${prefix}1${suffix}`)
+        .replace(iosDeployment, (_, prefix, suffix) => `${prefix}15.4${suffix}`));
       projects++;
     }
   }

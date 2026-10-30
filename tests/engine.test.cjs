@@ -11,9 +11,13 @@ async function waitFor(predicate, timeout = 3500) {
   while (Date.now() < deadline) { if (predicate()) return; await sleep(20); }
   assert.ok(predicate(), 'condition did not arrive before timeout');
 }
-function fixture(t, html = '') {
-  const dom = new JSDOM(`<body>${html}</body>`, { runScripts: 'outside-only', url: 'https://example.test' });
+function fixture(t, html = '', url = 'https://example.test') {
+  const dom = new JSDOM(`<body>${html}</body>`, { runScripts: 'outside-only', url });
   const w = dom.window;
+  // jsdom does not implement pseudo-element computed styles. Stub only that
+  // browser primitive; ordinary visibility still uses its real computed styles.
+  const computedStyle = w.getComputedStyle.bind(w);
+  w.getComputedStyle = (element, pseudo) => pseudo ? { content: 'none' } : computedStyle(element);
   scripts.forEach((source) => w.eval(source));
   const events = [];
   let enabled = true;
@@ -115,6 +119,316 @@ test('reliable reject selector does not override an explicit negated or acceptin
   await sleep(200);
   assert.equal(clicks, 0);
 });
+test('known reject IDs and classes require exact affirmative English refusal wording', async (t) => {
+  const labels = ['', 'Continue', 'OK', 'Got it', 'Close', 'Withdraw consent', 'Subscribe', 'Pay to continue',
+    'J’accepte les cookies', 'Accepter et continuer', 'Do not reject', 'Reject optional cookies and accept analytics'];
+  for (const selector of ['id="onetrust-reject-all-handler"', 'class="ot-pc-refuse-all-handler"']) {
+    for (const wording of labels) {
+      const f = fixture(t, `<div id="onetrust-banner-sdk"><p>Cookie consent</p><button ${selector}>${wording}</button></div>`);
+      let clicks = 0;
+      f.doc.querySelector('button').onclick = () => clicks++;
+      f.start();
+      await sleep(110);
+      f.disable();
+      assert.equal(clicks, 0, `${selector}: ${wording || '(blank)'}`);
+      assert.equal(f.events.length, 0);
+    }
+  }
+});
+test('refusal requires agreement between visible wording and each accessible name', async (t) => {
+  for (const markup of [
+    '<button id="onetrust-reject-all-handler" aria-label="Reject all">Accept all</button>',
+    '<button id="onetrust-reject-all-handler" aria-label="Accept all">Reject all</button>',
+    '<button id="onetrust-reject-all-handler" aria-label="Reject all" aria-labelledby="other">Reject all</button><span id="other">Subscribe</span>',
+    '<button aria-labelledby="other">Accept all</button><span id="other">Reject all</span>',
+    '<button aria-labelledby="missing">Reject all</button>',
+    '<button>Reject all<span aria-label="Accept all"></span></button>',
+    '<button><span aria-hidden="true">Reject all</span></button>',
+    '<button>Reject all<img alt="Accept all"></button>',
+    '<button aria-labelledby="other">Reject all</button><span id="other" aria-label="Accept all">Reject all</span>',
+    '<button aria-label="">Reject all</button>'
+  ]) {
+    const f = fixture(t, `<div id="onetrust-banner-sdk">Cookie consent${markup}</div>`);
+    let clicks = 0;
+    f.doc.addEventListener('click', () => clicks++);
+    f.start();
+    await sleep(110);
+    f.disable();
+    assert.equal(clicks, 0, markup);
+    assert.equal(f.events.length, 0);
+  }
+});
+test('hidden descendant text cannot change reject, manage or save meaning', async (t) => {
+  for (const [name, markup] of [
+    ['reject', banner()],
+    ['manage', '<div id="CybotCookiebotDialog">Cookie consent<button id="CybotCookiebotDialogBodyButtonDetails">Manage cookies</button></div>'],
+    ['save', cookiePanel()]
+  ]) {
+    const f = fixture(t, markup);
+    const button = name === 'reject' ? f.doc.getElementById('onetrust-reject-all-handler') : f.doc.querySelector('button');
+    button.innerHTML += '<span style="opacity:0"> Accept all</span>';
+    let clicks = 0;
+    f.doc.addEventListener('click', () => clicks++);
+    f.start();
+    await sleep(150);
+    f.disable();
+    assert.equal(clicks, 0, name);
+    assert.equal(f.events.length, 0, name);
+  }
+});
+test('opaque hosts and action descendants stay untouched, including unobservable native closed roots', async (t) => {
+  for (const [name, tag, childTag, mode, customised] of [
+    ['closed native role host', 'div', null, 'closed'],
+    ['open native role host', 'div', null, 'open'],
+    ['custom role host', 'cookie-choice', null, 'closed'],
+    ['uninitialised custom descendant', 'button', 'cookie-choice'],
+    ['open custom descendant', 'button', 'cookie-choice', 'open'],
+    ['closed custom descendant', 'button', 'cookie-choice', 'closed'],
+    ['open native descendant', 'button', 'span', 'open'],
+    ['closed native descendant', 'button', 'span', 'closed'],
+    ['customised action', 'button', null, null, true],
+    ['customised descendant', 'button', 'span', null, true]
+  ]) {
+    const f = fixture(t, '<div id="onetrust-banner-sdk">Cookie consent</div>');
+    const action = f.doc.createElement(tag);
+    action.id = 'onetrust-reject-all-handler';
+    action.setAttribute('role', 'button');
+    action.textContent = 'Reject all';
+    const host = childTag ? action.appendChild(f.doc.createElement(childTag)) : action;
+    if (customised) host.setAttribute('is', 'cookie-choice');
+    if (mode) host.attachShadow({ mode }).innerHTML = '<span>Accept all</span>';
+    f.doc.getElementById('onetrust-banner-sdk').appendChild(action);
+    let clicks = 0;
+    action.onclick = () => { clicks++; action.parentElement.remove(); };
+    f.start();
+    await sleep(150);
+    f.disable();
+    assert.equal(clicks, 0, name);
+    assert.equal(f.events.length, 0, name);
+  }
+});
+test('plain native buttons, links and button inputs remain supported', async (t) => {
+  for (const markup of [
+    '<button aria-label="Reject all">Reject all</button>', '<a href="#">Reject all</a>',
+    '<input type="button" value="Reject all">', '<input type="submit" value="Reject all">'
+  ]) {
+    const f = fixture(t, `<div id="onetrust-banner-sdk">Cookie consent${markup}</div>`);
+    let clicks = 0;
+    f.doc.querySelector('button, a, input').onclick = (event) => { event.preventDefault(); clicks++; event.target.parentElement.remove(); };
+    f.start();
+    await waitFor(() => f.events.length === 1);
+    assert.equal(clicks, 1, markup);
+  }
+});
+test('native associated labels cannot contradict reject, manage or save wording', async (t) => {
+  for (const [name, markup] of [
+    ['reject', banner()],
+    ['manage', '<div id="CybotCookiebotDialog">Cookie consent<button id="CybotCookiebotDialogBodyButtonDetails">Manage cookies</button></div>'],
+    ['save', cookiePanel()]
+  ]) {
+    for (const type of name === 'reject' ? ['button', 'input-button', 'input-submit'] : ['button']) {
+      for (const association of ['explicit', 'implicit']) {
+        const f = fixture(t, markup);
+        let action = name === 'reject' ? f.doc.getElementById('onetrust-reject-all-handler') : f.doc.querySelector('button');
+        if (type !== 'button') {
+          const input = f.doc.createElement('input');
+          input.type = type.slice(6);
+          input.value = action.textContent;
+          input.id = action.id;
+          action.replaceWith(input);
+          action = input;
+        }
+        const label = f.doc.createElement('label');
+        label.textContent = 'Accept all';
+        if (association === 'explicit') { label.htmlFor = action.id; f.doc.body.appendChild(label); }
+        else { action.replaceWith(label); label.appendChild(action); }
+        assert.equal(action.labels.length, 1, `${name}: ${type}: ${association}`);
+        let clicks = 0;
+        f.doc.addEventListener('click', () => clicks++);
+        f.start();
+        await sleep(120);
+        f.disable();
+        assert.equal(clicks, 0, `${name}: ${type}: ${association}`);
+        assert.equal(f.events.length, 0);
+      }
+    }
+  }
+});
+test('computed pseudo wording blocks reject, manage and save actions', async (t) => {
+  for (const [name, markup] of [
+    ['reject', banner()],
+    ['manage', '<div id="CybotCookiebotDialog">Cookie consent<button id="CybotCookiebotDialogBodyButtonDetails">Manage cookies</button></div>'],
+    ['save', cookiePanel()]
+  ]) {
+    for (const pseudo of ['::before', '::after']) {
+      const f = fixture(t, markup);
+      const action = name === 'reject' ? f.doc.getElementById('onetrust-reject-all-handler') : f.doc.querySelector('button');
+      const computedStyle = f.w.getComputedStyle;
+      f.w.getComputedStyle = (element, selectedPseudo) => element === action && selectedPseudo === pseudo
+        ? { content: '"Accept all"' } : computedStyle(element, selectedPseudo);
+      let clicks = 0;
+      f.doc.addEventListener('click', () => clicks++);
+      f.start();
+      await sleep(120);
+      f.disable();
+      assert.equal(clicks, 0, `${name}: ${pseudo}`);
+      assert.equal(f.events.length, 0);
+    }
+  }
+});
+test('unknown, unavailable and other generated pseudo content fails closed', async (t) => {
+  for (const content of [undefined, null, '', '" "', 'url("consent.svg")', 'attr(title)', 'throw']) {
+    const f = fixture(t, banner());
+    const action = f.doc.getElementById('onetrust-reject-all-handler');
+    const computedStyle = f.w.getComputedStyle;
+    f.w.getComputedStyle = (element, pseudo) => {
+      if (element === action && pseudo === '::after') {
+        if (content === 'throw') throw new Error('pseudo style unavailable');
+        return { content };
+      }
+      return computedStyle(element, pseudo);
+    };
+    let clicks = 0;
+    action.onclick = () => clicks++;
+    f.start();
+    await sleep(120);
+    f.disable();
+    assert.equal(clicks, 0, String(content));
+    assert.equal(f.events.length, 0);
+  }
+});
+test('established empty or non-rendering pseudo content preserves plain native actions', async (t) => {
+  for (const content of ['none', 'normal', '""', "''"]) {
+    const f = fixture(t, banner());
+    const computedStyle = f.w.getComputedStyle;
+    f.w.getComputedStyle = (element, pseudo) => pseudo ? { content } : computedStyle(element);
+    let clicks = 0;
+    f.doc.getElementById('onetrust-reject-all-handler').onclick = (event) => { clicks++; event.target.parentElement.remove(); };
+    f.start();
+    await waitFor(() => f.events.length === 1);
+    assert.equal(clicks, 1, content);
+  }
+});
+test('Frandroid and Télérama accept-only consent surfaces remain untouched', async (t) => {
+  const f = fixture(t, '<div id="didomi-notice">Cookie consent<button>J’accepte les cookies</button><button>Je rejoins Frandroid+</button></div><div role="dialog"><h2>Cookie consent</h2><button>Accepter et continuer</button><button>Paramétrer les cookies</button></div>');
+  let clicks = 0;
+  f.doc.addEventListener('click', () => clicks++);
+  f.start();
+  await sleep(350);
+  assert.equal(clicks, 0);
+  assert.equal(f.events.length, 0);
+});
+const bestLawyersNotice = (id = 'onlyEssentialCookies', attributes = '') => `<div class="cookie-notice" data-cookie-name="bl_cookie_policy_V4" ${attributes}><p>Cookie consent</p><button id="${id}">Only Use Essential Cookies</button><button id="acceptAllCookies">Accept All Cookies</button><button id="close">Close</button></div>`;
+for (const [host, id] of [['bestlawyers.com', 'onlyEssentialCookies'], ['www.bestlawyers.com', 'onlyEssentialCookiesMobile']]) {
+  test(`Best Lawyers ${id} requires its exact essential-only cookie outcome on ${host}`, async (t) => {
+    const f = fixture(t, bestLawyersNotice(id), `https://${host}/`);
+    let rejects = 0, other = 0;
+    f.doc.querySelectorAll('#acceptAllCookies, #close').forEach((button) => { button.onclick = () => other++; });
+    f.doc.getElementById(id).onclick = () => {
+      rejects++;
+      f.doc.cookie = 'bl_cookie_policy_V4=0; path=/';
+      f.doc.querySelector('.cookie-notice').hidden = true;
+    };
+    f.start();
+    await waitFor(() => f.events.length === 1);
+    assert.equal(rejects, 1);
+    assert.equal(other, 0);
+    assert.equal(f.doc.cookie, 'bl_cookie_policy_V4=0');
+    assert.equal(f.events[0].platform, 'Best Lawyers');
+    await sleep(150);
+    assert.equal(f.events.length, 1);
+  });
+}
+test('Best Lawyers adapter fails closed for host, scope, selector, label and actionability drift', async (t) => {
+  const cases = [
+    ['unrelated host', 'https://example.test/', (f) => {}],
+    ['subdomain', 'https://news.bestlawyers.com/', (f) => {}],
+    ['suffix host', 'https://www.bestlawyers.com.example.test/', (f) => {}],
+    ['wrong cookie name', 'https://www.bestlawyers.com/', (f) => { f.doc.querySelector('.cookie-notice').dataset.cookieName = 'bl_cookie_policy_V5'; }],
+    ['missing scope', 'https://www.bestlawyers.com/', (f) => { f.doc.querySelector('.cookie-notice').className = ''; }],
+    ['wrong ID', 'https://www.bestlawyers.com/', (f) => { f.doc.querySelector('button').id = 'onlyEssentialCookie'; }],
+    ['generic refusal fallback', 'https://www.bestlawyers.com/', (f) => { f.doc.querySelector('button').textContent = 'Reject all'; }],
+    ['accept label', 'https://www.bestlawyers.com/', (f) => { f.doc.querySelector('button').textContent = 'Accept All Cookies'; }],
+    ['close label', 'https://www.bestlawyers.com/', (f) => { f.doc.querySelector('button').textContent = 'Close'; }],
+    ['conflicting accessible label', 'https://www.bestlawyers.com/', (f) => { f.doc.querySelector('button').setAttribute('aria-label', 'Accept All Cookies'); }],
+    ['hidden control', 'https://www.bestlawyers.com/', (f) => { f.doc.querySelector('button').hidden = true; }],
+    ['disabled control', 'https://www.bestlawyers.com/', (f) => { f.doc.querySelector('button').disabled = true; }],
+    ['aria-disabled control', 'https://www.bestlawyers.com/', (f) => { f.doc.querySelector('button').setAttribute('aria-disabled', 'true'); }],
+    ['hidden notice', 'https://www.bestlawyers.com/', (f) => { f.doc.querySelector('.cookie-notice').hidden = true; }]
+  ];
+  for (const [name, url, prepare] of cases) {
+    const f = fixture(t, bestLawyersNotice('onlyEssentialCookies', 'role="dialog"'), url);
+    prepare(f);
+    let clicks = 0;
+    f.doc.addEventListener('click', () => clicks++);
+    f.start();
+    await sleep(110);
+    f.disable();
+    assert.equal(clicks, 0, name);
+    assert.equal(f.events.length, 0, name);
+  }
+  const f = fixture(t, '<div role="dialog"><h2>Cookie consent</h2><button>Reject all</button></div>', 'https://www.bestlawyers.com/');
+  let clicks = 0;
+  f.doc.querySelector('button').onclick = () => clicks++;
+  f.start();
+  await sleep(150);
+  assert.equal(clicks, 0, 'missing adapter scope must not enable a generic dialog');
+});
+test('Best Lawyers disappearance alone, duplicate cookies and cookie zero alone cannot count', async (t) => {
+  await Promise.all([
+    ['missing cookie', '', true], ['accept cookie', 'bl_cookie_policy_V4=1', true],
+    ['ambiguous duplicate', 'bl_cookie_policy_V4=0; bl_cookie_policy_V4=1', true],
+    ['duplicate zero', 'bl_cookie_policy_V4=0; bl_cookie_policy_V4=0', true],
+    ['encoded value', 'bl_cookie_policy_V4=%30', true],
+    ['ambiguous spaced duplicate', 'bl_cookie_policy_V4=0; bl_cookie_policy_V4 =1', true],
+    ['zero while visible', 'bl_cookie_policy_V4=0', false]
+  ].map(async ([name, cookie, hide]) => {
+    const f = fixture(t, bestLawyersNotice(), 'https://bestlawyers.com/');
+    let writes = 0, clicks = 0;
+    Object.defineProperty(f.doc, 'cookie', { get: () => cookie, set: () => { writes++; } });
+    f.doc.querySelector('button').onclick = () => { clicks++; if (hide) f.doc.querySelector('.cookie-notice').hidden = true; };
+    f.start();
+    await sleep(2500);
+    f.disable();
+    assert.ok(clicks >= 1 && clicks <= 3, name);
+    assert.equal(writes, 0, name);
+    assert.equal(f.events.length, 0, name);
+  }));
+});
+test('Best Lawyers malformed replacement notice still blocks completion', async (t) => {
+  const f = fixture(t, bestLawyersNotice(), 'https://bestlawyers.com/');
+  f.doc.querySelector('button').onclick = () => {
+    f.doc.cookie = 'bl_cookie_policy_V4=0';
+    f.doc.querySelector('.cookie-notice').remove();
+    f.doc.body.innerHTML = '<div class="cookie-notice" data-cookie-name="unknown"><cookie-options></cookie-options></div>';
+  };
+  f.start();
+  await sleep(2500);
+  assert.equal(f.events.length, 0);
+});
+test('Best Lawyers observes generic and other CMP replacements without authorising their actions', async (t) => {
+  await Promise.all([
+    ['generic', '<div role="dialog"><h2>Cookie preferences</h2><label>Analytics<input type="checkbox" checked></label><button>Reject all</button></div>'],
+    ['Cookiebot', cookiePanel()],
+    ['OneTrust', '<div id="onetrust-pc-sdk"><h2>Cookie preferences</h2><input type="checkbox" checked><button id="onetrust-reject-all-handler">Reject all</button></div>']
+  ].map(async ([name, replacement]) => {
+    const f = fixture(t, bestLawyersNotice(), 'https://www.bestlawyers.com/');
+    let clicks = 0;
+    f.doc.addEventListener('click', () => clicks++);
+    f.doc.getElementById('onlyEssentialCookies').onclick = () => {
+      f.doc.cookie = 'bl_cookie_policy_V4=0';
+      f.doc.querySelector('.cookie-notice').remove();
+      f.doc.body.innerHTML = replacement;
+    };
+    f.start();
+    await sleep(2500);
+    f.disable();
+    assert.equal(f.doc.cookie, 'bl_cookie_policy_V4=0', name);
+    assert.equal(clicks, 1, name);
+    assert.ok(Array.from(f.doc.querySelectorAll('input')).every((input) => input.checked), name);
+    assert.equal(f.events.length, 0, name);
+  }));
+});
 test('observer detects late inserted banner and attribute visibility changes', async (t) => {
   const f = fixture(t);
   f.start();
@@ -137,6 +451,61 @@ test('Cookiebot only saves after every optional native checkbox is off', async (
   await waitFor(() => f.events.length === 1);
   assert.equal(clicks, 3);
   assert.equal(saves(), 1);
+});
+test('Manage cookies and Save preferences remain supported with a complete inventory', async (t) => {
+  const f = fixture(t, '<div id="CybotCookiebotDialog">Cookie consent<button id="CybotCookiebotDialogBodyButtonDetails">Manage cookies</button></div>');
+  let opens = 0, saves = 0;
+  f.doc.querySelector('button').onclick = () => {
+    opens++;
+    f.doc.getElementById('CybotCookiebotDialog').innerHTML = cookieControls() + '<button id="CybotCookiebotDialogBodyLevelButtonAccept">Save preferences</button>';
+    f.doc.querySelector('button').onclick = () => {
+      assert.ok(Array.from(f.doc.querySelectorAll('input:not(:disabled)')).every((input) => !input.checked));
+      saves++;
+      f.doc.getElementById('CybotCookiebotDialog').remove();
+    };
+  };
+  f.start();
+  await waitFor(() => f.events.length === 1);
+  assert.equal(opens, 1);
+  assert.equal(saves, 1);
+});
+test('known manage and save selectors require positive wording with no accessible conflict', async (t) => {
+  const labels = ['', 'Continue', 'Close', 'Withdraw consent', 'OK', 'Subscribe', 'Pay to continue',
+    'Accepter et continuer', 'Accept all'];
+  for (const action of ['manage', 'save']) {
+    for (const text of [...labels, 'conflicting accessible name', 'conflicting visible name']) {
+      const isConflict = text.startsWith('conflicting');
+      const markup = action === 'manage'
+        ? '<div id="CybotCookiebotDialog">Cookie consent<button id="CybotCookiebotDialogBodyButtonDetails">Manage cookies</button></div>'
+        : cookiePanel();
+      const f = fixture(t, markup);
+      const button = f.doc.querySelector('button');
+      if (text === 'conflicting accessible name') button.setAttribute('aria-label', 'Accept all');
+      else if (text === 'conflicting visible name') {
+        button.setAttribute('aria-label', button.textContent);
+        button.textContent = 'Accept all';
+      } else button.textContent = text;
+      let clicks = 0;
+      f.doc.addEventListener('click', () => clicks++);
+      f.start();
+      await sleep(110);
+      f.disable();
+      assert.equal(clicks, 0, `${action}: ${isConflict ? text : text || '(blank)'}`);
+      assert.equal(f.events.length, 0);
+      assert.ok(Array.from(f.doc.querySelectorAll('input')).every((input) => input.checked));
+    }
+  }
+});
+test('save wording is revalidated when it changes during optional-off clicks', async (t) => {
+  const f = fixture(t, cookiePanel());
+  f.doc.querySelector('input:not(:disabled)').onclick = () => { f.doc.querySelector('button').textContent = 'Continue'; };
+  let saves = 0;
+  f.doc.querySelector('button').onclick = () => saves++;
+  f.start();
+  await sleep(500);
+  assert.equal(saves, 0);
+  assert.equal(f.events.length, 0);
+  assert.ok(f.doc.querySelectorAll('input:checked').length > 1);
 });
 for (const [name, hostTag, mode, hostIsPanel] of [
   ['open custom-element root', 'cookie-options', 'open', false],
@@ -308,6 +677,44 @@ test('replacing the banner with a preferences dialog after Reject does not count
   f.start();
   await sleep(2600);
   assert.equal(f.events.length, 0);
+});
+test('opaque replacement consent surfaces cannot be mistaken for an empty mount', async (t) => {
+  await Promise.all([
+    ['observable shadow host', (f, root) => { root.appendChild(f.doc.createElement('div')).attachShadow({ mode: 'open' }); }],
+    ['shadow root on mount', (f, root) => { root.attachShadow({ mode: 'open' }); }],
+    ['custom element', (f, root) => { root.appendChild(f.doc.createElement('cookie-options')); }],
+    ['closed custom element', (f, root) => { root.appendChild(f.doc.createElement('cookie-options')).attachShadow({ mode: 'closed' }); }],
+    ['customised built-in', (f, root) => { root.innerHTML = '<div is="cookie-options"></div>'; }],
+    ['declarative shadow template', (f, root) => { root.innerHTML = '<template shadowrootmode="closed"><button>Accept all</button></template>'; }]
+  ].map(async ([name, replace]) => {
+    const f = fixture(t, '<div class="qc-cmp2-container"><div class="qc-cmp2-ui">Cookie consent<button>Reject all</button></div></div>');
+    let clicks = 0;
+    f.doc.querySelector('button').onclick = () => {
+      clicks++;
+      const root = f.doc.querySelector('.qc-cmp2-container');
+      root.replaceChildren();
+      replace(f, root);
+    };
+    f.start();
+    await sleep(2500);
+    f.disable();
+    assert.equal(clicks, 1, name);
+    assert.equal(f.events.length, 0, name);
+  }));
+});
+test('a shadow-only missing refusal target is never traversed or counted', async (t) => {
+  for (const scope of ['id="cmpwrapper"', 'id="onetrust-banner-sdk"']) {
+    const f = fixture(t, `<div ${scope}></div>`);
+    const shadow = f.doc.querySelector('div').attachShadow({ mode: 'open' });
+    shadow.innerHTML = '<button id="onetrust-reject-all-handler">Zustimmung widerrufen</button><button>Reject all</button>';
+    let clicks = 0;
+    shadow.querySelectorAll('button').forEach((button) => { button.onclick = () => clicks++; });
+    f.start();
+    await sleep(350);
+    f.disable();
+    assert.equal(clicks, 0);
+    assert.equal(f.events.length, 0);
+  }
 });
 test('content wiring defaults enabled, respects storage change races, and emits minimal completed event', async (t) => {
   const f = fixture(t, banner());

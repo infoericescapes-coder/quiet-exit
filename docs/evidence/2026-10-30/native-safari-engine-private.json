@@ -1,0 +1,596 @@
+{
+  "version": 1,
+  "scope": "Native Safari page-engine evidence only. Actual source scripts run in local synthetic pages; no installed extension, popup, storage, permission, Best Lawyers hostname or live-site proof. Other installed extensions are not claimed disabled; per-case no-engine baselines detect observable interference only.",
+  "startedAt": "2026-10-29T23:15:45.610Z",
+  "finishedAt": "2026-10-29T23:17:22.030Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15",
+  "sources": {
+    "extension/content/platforms.js": "5ed7b4cdf84dff59d1787911252e487d4576bdc58342b84fcc5ab78fc9bd6c92",
+    "extension/content/engine.js": "d08398f31f4dca422fc908a7c2c4602fef9f5f2f08a6555bc688885e91bcc1e4",
+    "extension/assets/fonts/space-grotesk.ttf": "acad6de1fc93436f5c0f1f4137751ef04f1aea3063e7036535970ffcfbd79f72",
+    "extension/assets/fonts/ibm-plex-mono.ttf": "6a3412f058c7d8dfd9170c41e85ade48e5156ecb89356110ca57a0a27734af46",
+    "tests/fixtures/consent-patterns.mjs": "5005812f58e1e157dabef80175d393216fd9b3829b6893c25aaecaa02f874b05",
+    "artifacts/native-safari-engine-harness.mjs": "87d4ebbce1de2ce6fde812eee61d576336d9849266ba075e0141c76cf537c199"
+  },
+  "complete": true,
+  "passed": true,
+  "results": [
+    {
+      "id": "frandroid-accept-only",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3003,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "telerama-accept-only",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3001,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3000,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "drifted-reject",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3001,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "conflicting-label",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3001,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "neutral-notice",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3003,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3001,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "opaque-replacement",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3001,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 1,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "opaque-action",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "opacity-label",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3001,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "associated-label",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3001,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "generated-label",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "shadow-only",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "drifted-manage",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3001,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "drifted-save",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [
+            true,
+            true,
+            true
+          ],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3001,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [
+            true,
+            true,
+            true
+          ],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "positive-direct",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3003,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 1,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 1,
+          "optionalStates": [],
+          "surfacePresent": false
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "positive-preferences",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [
+            true,
+            true,
+            true
+          ],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3002,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 1,
+          "optionalClicks": 3,
+          "optionalConsent": false,
+          "completed": 1,
+          "optionalStates": [
+            false,
+            false,
+            false
+          ],
+          "surfacePresent": false
+        },
+        "failures": []
+      },
+      "errors": []
+    },
+    {
+      "id": "disabled-control",
+      "passed": true,
+      "baseline": {
+        "durationMs": 3003,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "active": {
+        "durationMs": 3001,
+        "state": {
+          "accept": 0,
+          "reject": 0,
+          "other": 0,
+          "save": 0,
+          "optionalClicks": 0,
+          "optionalConsent": false,
+          "completed": 0,
+          "optionalStates": [],
+          "surfacePresent": true
+        },
+        "failures": []
+      },
+      "errors": []
+    }
+  ],
+  "errors": []
+}

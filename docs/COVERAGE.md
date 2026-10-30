@@ -1,9 +1,10 @@
 # Consent coverage
 
-Quiet Exit 0.1.2 targets English consent interfaces in Chrome and Safari. The rules recognise the scopes below. Recognition does not guarantee that every deployment, theme or version of a consent manager can be handled.
+Quiet Exit 0.1.3 targets English consent interfaces in Chrome and Safari. The rules recognise the scopes below. Recognition does not guarantee that every deployment, theme or version of a consent manager can be handled.
 
 | Consent manager | Direct rejection | Preferences without a reject control |
 | --- | --- | --- |
+| Best Lawyers, exact bare/www hostname | Exact desktop/mobile essential-only controls and wording; completion additionally requires the known consent cookie value `0` | No fallback when the adapter's scope, action or outcome is ambiguous |
 | OneTrust | Known reject selectors and exact English rejection labels | Complete, rendered category rows in the supported `ot-pc-content` layout, with inspectable native checkboxes or ARIA switches |
 | Cookiebot | Known decline selectors and exact English rejection labels | Four inspectable category controls: Necessary, Preferences, Statistics and Marketing |
 | Klaro | Known decline selectors and exact English rejection labels | Flat service list only; grouped purpose layouts are left untouched |
@@ -15,12 +16,13 @@ The first three profiles inspect the whole supported panel, identify all control
 
 ## Boundaries
 
-- English labels only. Known selector rules are not a multilingual support claim.
+- English labels only. Selectors locate candidates but do not authorise actions without positive supported wording. Accept-only, payment, neutral and contradictory labels stay untouched. This is not a multilingual support claim.
+- Action controls must be plain inspectable native controls. Formatted/icon or externally labelled controls can be skipped rather than guessing their rendered/accessibility meaning.
 - No general shadow-root traversal in this version. Mixed shadow-DOM and custom-host layouts fail closed when the panel cannot be fully inspected. Closed roots and embedded surfaces whose controls cannot be inspected remain unobservable and may require manual handling; this is not a claim of support for all sites.
 - Content scripts run in permitted matching frames. Browser-protected documents, inaccessible frames and site-access restrictions can prevent operation.
 - An unknown preference component, vendor list, paywall, multi-step consent wizard or purpose-group layout is not guessed.
 - Three attempts per banner instance and 60 actions per active frame session bound retries. A stuck banner remains visible. After the frame action budget is exhausted, reloading the page or toggling the extension off/on starts a new session.
-- A successful count records disappearance of the relevant interface after a deliberate rejection/save action. It does not inspect stored cookie values or verify server-side enforcement.
+- A successful count records disappearance of the relevant interface after a deliberate refusal/save action. Best Lawyers additionally requires its single exact page-visible consent marker `bl_cookie_policy_V4=0`. Other profiles do not inspect stored consent, and none verifies server-side enforcement. Observable opaque replacements remain unresolved; closed roots on ordinary native mounts may be unobservable.
 - Once a banner DOM instance is counted, it is not counted or acted on again during that document's lifetime. A newly created banner element may be handled separately.
 - This is a development version. Broad live-site compatibility testing and store review have not been completed.
 

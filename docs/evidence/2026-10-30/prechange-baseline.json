@@ -1,0 +1,15 @@
+{
+  "commit": "c3e696e",
+  "observations": [
+    {
+      "kind": "mislabelled-reject-selector",
+      "clicks": 1,
+      "completionEvents": 1
+    },
+    {
+      "kind": "opaque-replacement",
+      "clicks": 1,
+      "completionEvents": 1
+    }
+  ]
+}

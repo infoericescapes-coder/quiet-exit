@@ -3,12 +3,15 @@
   'use strict';
   const doc = global.document;
   const BUTTONS = 'button, a, input[type="button"], input[type="submit"], [role="button"]';
+  const NATIVE_ACTIONS = 'button, a, input[type="button"], input[type="submit"]';
   const CONTROLS = 'input:not([type="hidden"]), select, textarea, [role="switch"], [role="checkbox"], [aria-pressed], [aria-checked]';
   const REJECT = new Set(['reject', 'reject all', 'reject all cookies', 'deny', 'deny all', 'deny all cookies',
     'decline', 'decline all', 'decline all cookies', 'only necessary', 'necessary only', 'essential only',
     'only essential cookies', 'only necessary cookies', 'use only necessary cookies', 'essential cookies only',
     'reject optional cookies', 'reject non-essential cookies', 'continue without accepting']);
-  const MANAGE = new Set(['manage preferences', 'cookie settings', 'cookie preferences', 'customize', 'customise', 'settings']);
+  const MANAGE = new Set(['manage cookies', 'manage preferences', 'manage cookie preferences', 'cookie settings', 'cookie preferences', 'customize', 'customise', 'settings']);
+  const SAVE = new Set(['allow selection', 'accept selection', 'accept selected', 'save selection',
+    'save preferences', 'save my preferences', 'save settings', 'confirm my choices', 'confirm choices']);
   const REQUIRED = /^(strictly necessary|necessary|essential)( cookies)?$/;
   const LIMIT = 60;
   const MAX_ATTEMPTS = 3;
@@ -19,11 +22,34 @@
   const completed = new WeakSet();
   const normalize = (value) => String(value || '').replace(/\s+/g, ' ').trim().toLowerCase();
   const all = (root, selector) => Array.from(root.querySelectorAll(selector));
+  function noGeneratedWording(element) {
+    try {
+      for (const pseudo of ['::before', '::after']) {
+        const content = global.getComputedStyle(element, pseudo)?.content;
+        if (typeof content !== 'string' || !['none', 'normal', '""', "''"].includes(content.trim())) return false;
+      }
+      return true;
+    } catch { return false; }
+  }
   function label(element) {
     const refs = (element.getAttribute('aria-labelledby') || '').split(/\s+/).filter(Boolean);
     if (element.hasAttribute('aria-label')) return normalize(element.getAttribute('aria-label'));
     if (refs.length) return normalize(refs.map((id) => doc.getElementById(id)?.textContent || '').join(' '));
     return normalize(element.value && element.tagName === 'INPUT' ? element.value : element.textContent);
+  }
+  function actionWording(element, allowed) {
+    // Selectors identify candidates, never their current meaning. Require positive
+    // visible wording and validate every supplied accessible name independently.
+    // Native role hosts and native descendants such as span/div may conceal an
+    // unobservable closed root. Only plain native controls are inspectable here.
+    // Reject external names rather than approximate the accessibility algorithm.
+    if (element.namespaceURI !== 'http://www.w3.org/1999/xhtml' ||
+      !element.matches(NATIVE_ACTIONS) || element.children.length || opaqueSurface(element) ||
+      element.hasAttribute('aria-labelledby') || element.labels?.length || !noGeneratedWording(element)) return false;
+    // No descendants means hidden text cannot be silently removed from the name.
+    const wording = [normalize(element.tagName === 'INPUT' ? element.value : element.textContent)];
+    if (element.hasAttribute('aria-label')) wording.push(normalize(element.getAttribute('aria-label')));
+    return wording.every((text) => allowed.has(text));
   }
   function visible(element, geometry = true) {
     if (!element?.isConnected) return false;
@@ -75,14 +101,22 @@
     const purpose = titled ? label(root) : heading ? normalize(heading.textContent) : text;
     return /^(we use cookies|this (website|site) uses cookies|cookie consent|cookie preferences|cookie settings|cookies? and (privacy|consent)|manage cookie preferences|privacy preferences|your privacy choices|we value your privacy)\b/.test(purpose);
   }
-  // An embedded consent surface is still an interface, even without DOM text.
-  const hasContent = (root) => !!normalize(root.textContent) || !!root.querySelector(BUTTONS + ', ' + CONTROLS + ', iframe, embed, object, canvas, img, svg');
-  function scopes() {
+  // Inspect host presence only. Never traverse roots whose choices we cannot inventory.
+  const opaqueSurface = (root) => [root, ...all(root, '*')].some((node) => node.shadowRoot ||
+    node.localName.includes('-') || node.hasAttribute('is') || node.matches('template[shadowrootmode]'));
+  // An embedded or opaque consent surface is still an interface, even without DOM text.
+  const hasContent = (root) => !!normalize(root.textContent) || opaqueSurface(root) ||
+    !!root.querySelector(BUTTONS + ', ' + CONTROLS + ', iframe, embed, object, canvas, img, svg');
+  function scopes(forObservation = false) {
     const found = [];
-    for (const platform of global.QuietExitPlatforms || []) {
+    const eligible = (global.QuietExitPlatforms || []).filter((platform) => !platform.hosts || platform.hosts.includes(global.location.hostname));
+    const strict = eligible.filter((platform) => platform.strict);
+    // Strict adapters restrict actions, while completion must still observe all
+    // recognised consent surfaces, including generic or other CMP replacements.
+    for (const platform of strict.length && !forObservation ? strict : eligible) {
       for (const root of all(doc, platform.scopes)) if (visible(root, false) && hasContent(root)) found.push({ root, platform });
     }
-    for (const root of all(doc, '[role="dialog"], [aria-modal="true"], dialog, [id*="cookie-consent"], [class~="cookie-consent"]')) {
+    for (const root of strict.length && !forObservation ? [] : all(doc, '[role="dialog"], [aria-modal="true"], dialog, [id*="cookie-consent"], [class~="cookie-consent"]')) {
       if (visible(root, false) && genericScope(root) && !found.some((item) => item.root.contains(root) || root.contains(item.root))) {
         found.push({ root, platform: { name: 'Cookie dialog', scopes: null } });
       }
@@ -91,18 +125,15 @@
     return found.filter((item) => !found.some((other) => other !== item && other.platform.name === item.platform.name && other.root.contains(item.root)));
   }
   function direct(root, platform) {
-    const candidates = all(root, BUTTONS).filter(actionable);
-    if (platform.reject) {
-      const reliable = candidates.find((button) => button.matches(platform.reject) &&
-        !/\b(accept|allow|agree|enable|do not|don't|not now)\b/.test(label(button)));
-      if (reliable) return reliable;
-    }
-    return candidates.find((button) => REJECT.has(label(button)));
+    const allowed = platform.rejectionText ? new Set([platform.rejectionText]) : REJECT;
+    const candidates = all(root, BUTTONS).filter((button) => actionable(button) && actionWording(button, allowed));
+    const known = platform.reject && candidates.find((button) => button.matches(platform.reject));
+    return known || (platform.strict ? null : candidates[0]);
   }
   function manage(root, platform) {
     if (!platform.profile) return null;
     return all(root, BUTTONS).find((button) => actionable(button) &&
-      ((platform.manage && button.matches(platform.manage)) || MANAGE.has(label(button))));
+      actionWording(button, MANAGE));
   }
   function state(control) {
     if (control.matches('input[type="checkbox"]')) return control.indeterminate ? null : control.checked;
@@ -125,8 +156,7 @@
     if (!visible(panel, false)) return true;
     // Inventory only understands light DOM. Reject component hosts even without
     // an observable root: a closed root (or later upgrade) can conceal choices.
-    if ([panel, ...all(panel, '*')].some((node) => node.shadowRoot ||
-      node.localName.includes('-') || node.hasAttribute('is'))) return true;
+    if (opaqueSurface(panel)) return true;
     if (/legitimate interest|\bvendors?\b|third.party partners/i.test(panel.textContent)) return true;
     if (panel.querySelector('[aria-expanded="false"], details:not([open]), [role="tabpanel"][hidden], iframe, embed, object, canvas, template[shadowrootmode], [id*="vendor"], [class*="vendor"], [id*="legint"]')) return true;
     return all(panel, CONTROLS).some((control) => !control.matches('input[type="checkbox"], [role="switch"], [role="checkbox"]'));
@@ -183,9 +213,8 @@
       save = panel.querySelector('.cm-footer .cm-btn-accept:not(.cm-btn-accept-all)');
     } else return null;
     if (!optional.length || controls.some((control) => !allowed.has(control)) || !save || !actionable(save)) return null;
-    // A profile's save selector is allowed only here, after full inventory. It may
-    // be labelled "Accept selection" by the CMP; accept-all is never clicked.
-    if (/\b(accept all|allow all|agree to all)\b/.test(label(save))) return null;
+    // Selection wording is meaningful only after a complete optional-off inventory.
+    if (!actionWording(save, SAVE)) return null;
     if (optional.some((control) => state(control) === null || disabled(control) || !controlTarget(control, panel))) return null;
     return { optional, save };
   }
@@ -194,12 +223,22 @@
     return all(doc, platform.panel).find((panel) => visible(panel, false)) || null;
   }
   function familyVisible(root, platform) {
-    return (visible(root, false) && hasContent(root)) || scopes().some((item) => item.platform.name === platform.name);
+    return (visible(root, false) && hasContent(root)) ||
+      (platform.guardScopes && all(doc, platform.guardScopes).some((node) => visible(node, false) && hasContent(node))) ||
+      scopes(!!platform.strict).some((item) => platform.strict || item.platform.name === platform.name);
+  }
+  function outcomeKnown(platform) {
+    if (!platform.outcomeCookie) return true;
+    // Read-only evidence: duplicates, missing values and any value other than the
+    // retained site's exact essential-only marker cannot establish an outcome.
+    const entries = doc.cookie.split(';').map((entry) => entry.trim()).filter((entry) =>
+      entry.split('=')[0].trim() === platform.outcomeCookie);
+    return entries.length === 1 && entries[0] === platform.outcomeCookie + '=0';
   }
   async function confirmed(run, root, platform) {
     let absentSince = null;
     return !!(await until(run, () => {
-      if (familyVisible(root, platform)) { absentSince = null; return false; }
+      if (familyVisible(root, platform) || !outcomeKnown(platform)) { absentSince = null; return false; }
       if (absentSince === null) absentSince = Date.now();
       return Date.now() - absentSince >= SETTLE_MS;
     }));

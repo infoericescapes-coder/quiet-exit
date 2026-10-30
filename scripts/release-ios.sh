@@ -27,6 +27,7 @@ signing stays automatic; each export bundle uses its own explicit profile UUID.
 Execution also requires ASC_API_SCRIPT pointing to the reviewed Simple Social
 scripts/asc_api.py, exactly one ~/private_keys/AuthKey_*.p8, issuer_id.txt,
 and the distribution inputs named by apple-signing-for-codex.md.
+Optional DISTRIBUTION_PRIVATE_KEY selects an existing key by absolute path.
 Eric must be present; no other signing run may be active. This script does not
 create ASC apps or assign testers. Never rerun blindly after an uncertain upload.
 USAGE
@@ -40,12 +41,21 @@ for argument in "$@"; do
 done
 [[ "${ASC_APP_ID:-}" =~ ^[1-9][0-9]*$ ]] || fail "set ASC_APP_ID from verified App Store Connect readback"
 [[ "${BUILD_NUMBER:-}" =~ ^[1-9][0-9]*$ ]] || fail "set BUILD_NUMBER to an unused positive integer"
+if [[ "${DISTRIBUTION_PRIVATE_KEY+x}" == x ]]; then
+    [[ "$DISTRIBUTION_PRIVATE_KEY" == /* ]] || fail "DISTRIBUTION_PRIVATE_KEY must be an absolute path"
+fi
 APP_ID="$ASC_APP_ID"
 BUILD_NUM="$BUILD_NUMBER"
 command -v node >/dev/null || fail "Node.js is required for package version validation"
 VERSION="$(node -e 'process.stdout.write(JSON.parse(require("node:fs").readFileSync(process.argv[1],"utf8")).version)' "$ROOT/package.json")"
 [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "package version must be numeric X.Y.Z"
-[[ -f "$PROJECT/project.pbxproj" ]] || fail "generate the native wrapper before release"
+if [[ -f "$PROJECT/project.pbxproj" ]]; then
+    PROJECT_FILE="$PROJECT/project.pbxproj"
+elif [[ -f "$PROJECT/project.xcproj" ]]; then
+    PROJECT_FILE="$PROJECT/project.xcproj"
+else
+    fail "generate the native wrapper before release"
+fi
 [[ -f "$ROOT/dist/safari/manifest.json" ]] || fail "build the web resources before release"
 node - "$ROOT/dist/safari/manifest.json" "$VERSION" <<'JS'
 const fs = require('node:fs');
@@ -57,10 +67,26 @@ if (manifest.version !== process.argv[3] || manifest.manifest_version !== 3 ||
   throw new Error('Safari resources are stale or incompatible; rebuild and validate before release');
 }
 JS
-for identifier in "$BUNDLE_ID" "$EXTENSION_ID"; do
-    grep -F "PRODUCT_BUNDLE_IDENTIFIER = $identifier;" "$PROJECT/project.pbxproj" >/dev/null \
-      || fail "native wrapper is missing expected bundle ID $identifier"
-done
+node - "$PROJECT_FILE" "$BUNDLE_ID" "$EXTENSION_ID" <<'JS'
+const fs = require('node:fs');
+const filename = process.argv[2];
+const project = fs.readFileSync(filename, 'utf8').replace(
+  /"(?:\\.|[^"\\])*"|\/\*[\s\S]*?\*\/|\/\/[^\r\n]*/g,
+  token => token.startsWith('"') ? token : token.replace(/[^\r\n]/g, ' '));
+const expected = process.argv.slice(3);
+// Match complete build-setting assignments, not comments or ID substrings.
+// Xcode 27's quoted project.xcproj format permits trailing commas.
+const pattern = filename.endsWith('/project.xcproj')
+  ? /^[\t ]*"PRODUCT_BUNDLE_IDENTIFIER"[\t ]*:[\t ]*"([^"\\\r\n]*)"[\t ]*,?[\t ]*\r?$/gm
+  : /^[\t ]*PRODUCT_BUNDLE_IDENTIFIER[\t ]*=[\t ]*(?:"([^"\\\r\n]*)"|([^;"\r\n]*?))[\t ]*;[\t ]*\r?$/gm;
+const identifiers = [...project.matchAll(pattern)].map(match => match[1] ?? match[2].trim());
+for (const identifier of expected) {
+  if (!identifiers.includes(identifier)) throw new Error(`native wrapper is missing expected bundle ID ${identifier}`);
+}
+for (const identifier of identifiers) {
+  if (!expected.includes(identifier)) throw new Error(`native wrapper has unexpected bundle ID ${identifier}`);
+}
+JS
 printf 'Plan: Quiet Exit %s (%s), ASC app %s, team %s\n' "$VERSION" "$BUILD_NUM" "$APP_ID" "$TEAM"
 printf 'App: %s; extension: %s\n' "$BUNDLE_ID" "$EXTENSION_ID"
 if [[ "$EXECUTE" -eq 0 ]]; then
@@ -80,7 +106,7 @@ command -v python3 >/dev/null || fail "Python 3 is required"
 command -v xcodebuild >/dev/null || fail "full Xcode is required"
 KEY_DIR="$HOME/private_keys"
 DIST_DIR="$KEY_DIR/distribution"
-DIST_KEY="$DIST_DIR/simplesocial-dist.key"
+DIST_KEY="${DISTRIBUTION_PRIVATE_KEY:-$DIST_DIR/simplesocial-dist.key}"
 DIST_CER="$DIST_DIR/simplesocial-dist.cer"
 DIST_WWDR="$DIST_DIR/AppleWWDRCAG3.cer"
 for input in "$DIST_KEY" "$DIST_CER" "$DIST_WWDR" "$KEY_DIR/issuer_id.txt"; do

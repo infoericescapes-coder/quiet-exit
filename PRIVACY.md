@@ -9,6 +9,8 @@ Quiet Exit processes consent interfaces locally in the browser. It does not send
 
 The extension does not request cookies, browsing history, network interception or native messaging permissions. Its only automatic site interactions are supported consent controls. Websites may make their own requests in response to those controls, just as when you click them manually.
 
+On `bestlawyers.com` and `www.bestlawyers.com`, the bundled adapter reads the page-visible `bl_cookie_policy_V4` consent value through `document.cookie` after an essential-only action. It requires the site's known value `0` before recording completion. This value stays in the page's content-script check; it is not stored in extension data or sent anywhere. Quiet Exit does not write or delete cookies and does not request the browser cookies API.
+
 ## Local data
 
 Settings and aggregate counts use `storage.local`, not browser sync. Removing the extension removes its extension storage according to your browser's normal behaviour. Turning it off stops automatic interactions; it does not reverse choices already submitted to sites or erase existing cookies.

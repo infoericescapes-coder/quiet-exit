@@ -2,6 +2,10 @@
 (function (global) {
   'use strict';
   global.QuietExitPlatforms = Object.freeze([
+    { name: 'Best Lawyers', hosts: ['bestlawyers.com', 'www.bestlawyers.com'], strict: true,
+      scopes: '.cookie-notice[data-cookie-name="bl_cookie_policy_V4"]', guardScopes: '.cookie-notice',
+      reject: '#onlyEssentialCookies, #onlyEssentialCookiesMobile', rejectionText: 'only use essential cookies',
+      outcomeCookie: 'bl_cookie_policy_V4' },
     { name: 'OneTrust', scopes: '#onetrust-banner-sdk, #onetrust-pc-sdk',
       reject: '#onetrust-reject-all-handler, .ot-pc-refuse-all-handler',
       manage: '#onetrust-pc-btn-handler', panel: '#onetrust-pc-sdk', profile: 'onetrust' },
