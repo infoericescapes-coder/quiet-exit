@@ -1,0 +1,17 @@
+{
+  "bundles": [
+    {
+      "CFBundleIdentifier": "com.ericescapes.quietexit",
+      "CFBundleShortVersionString": "0.1.3",
+      "CFBundleVersion": "1",
+      "MinimumOSVersion": "15.4"
+    },
+    {
+      "CFBundleIdentifier": "com.ericescapes.quietexit.Extension",
+      "CFBundleShortVersionString": "0.1.3",
+      "CFBundleVersion": "1",
+      "MinimumOSVersion": "15.4"
+    }
+  ],
+  "resourceMismatches": []
+}

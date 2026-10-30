@@ -1,12 +1,12 @@
 # Foundation handoff: Quiet Exit 0.1.3
 
-Prepared 30 October 2026 (Australia/Sydney). Start here for the current native iOS test work. The goal is to build and exercise the **installed Safari extension** on iPhone and iPad, record fresh evidence, and resolve any reproduced defects without weakening the refusal contract.
+Updated 31 October 2026 (Australia/Sydney). Start here for the current native iOS test work. The goal is to build and exercise the **installed Safari extension** on iPhone and iPad, record fresh evidence, and resolve any reproduced defects without weakening the refusal contract.
 
 ## Start from the latest work
 
 - Repository: [infoericescapes-coder/quiet-exit](https://github.com/infoericescapes-coder/quiet-exit).
 - Latest feature branch: **`codex/consent-outcome-hardening`**, [PR #2](https://github.com/infoericescapes-coder/quiet-exit/pull/2), targeting `codex/initial-extension`.
-- At handoff preparation, PR #2 was open and draft at `7d8549e7787fa465deb2ccc103b1ff4f0d89df27`. That commit contains the tested source and Safari fallback evidence; the handoff itself is a subsequent documentation change. Fetch the latest branch and record the actual SHA used for testing.
+- The current simulator test run started at `20d4f1897902aa4e086510409814ea7af6b1f498`, with the reviewed Xcode 27 packaging/release-preflight fixes described in the dated report. Consent scripts were unchanged. Fetch the latest branch and record the actual SHA used for testing; inspect current PR state before merging.
 - The underlying app branch is `codex/initial-extension`, with [draft PR #1](https://github.com/infoericescapes-coder/quiet-exit/pull/1) targeting `main`. Neither PR was merged when this handoff was prepared; `main` contains only the repository introduction. Recheck their live states before any merge.
 
 Read [AGENTS.md](AGENTS.md), [README.md](README.md), [coverage](docs/COVERAGE.md), the [30 October integration report](docs/CONSENT-HARDENING-2026-10-30.md), and the [native iOS procedure](docs/IOS-TESTING.md). The latter opens with **historical 0.1.2 results**; use its procedure while testing current 0.1.3 source afresh.
@@ -24,7 +24,7 @@ For an existing checkout, inspect its branch, changes and native project before 
 
 ## What has passed
 
-These results apply to the reviewed 0.1.3 source introduced in `73d29ee10b4492cfad82107312f3794189f8ad26`, unchanged in `7d8549e`. Re-run applicable checks after any source change.
+The table below records the **30 October checks**, not the latest native run. Those results apply to the reviewed 0.1.3 source introduced in `73d29ee10b4492cfad82107312f3794189f8ad26`, unchanged in `7d8549e`. Re-run applicable checks after any source change.
 
 | Verification | Observed result | Scope |
 | --- | --- | --- |
@@ -38,7 +38,11 @@ These results apply to the reviewed 0.1.3 source introduced in `73d29ee10b4492cf
 
 [Structured verification](docs/evidence/2026-10-30/verification.json), [42-case results](docs/evidence/2026-10-30/consent-pattern-results.json), and [native page-engine evidence/replay](docs/evidence/2026-10-30/NATIVE-SAFARI-ENGINE.md) are committed. The first ordinary-window native run is retained as **15/16**: an acceptance occurred during the no-engine baseline for `drifted-manage`, so Quiet Exit was never started for that case. Its cause was not attributed to a specific extension. The unchanged harness passed all baselines and active checks in the private window.
 
-**No fresh 0.1.3 installed Safari extension or iOS result exists yet.** Local macOS temporary loading required Touch ID/password authentication while Eric was away. The prompt was cancelled; unsigned extensions remained off. This preparation Mac lacked full Xcode. MacminiM4 had the historical Xcode/native setup, but its current availability was not established.
+**Fresh installed 0.1.3 simulator testing is now available:** [31 October report](docs/IOS-TEST-RESULTS-2026-10-31.md) and [evidence/replay](docs/evidence/2026-10-31/README.md). Xcode 27.2 built and installed app/extension 0.1.3 (1) on iPhone 18 Pro and iPhone Duo, both simulated iOS 27.2. Each passed the 26-case off baseline and enabled matrix, with zero acceptance/other/unrelated actions and popup 0 → 3. Both passed pause-before-queue, resume, genuine bfcache and Safari restart persistence checks. Initial inconclusive/operator-invalid attempts are retained alongside valid repeats. The latest integrated suite has 124 unit tests plus browser/popup and 42 consent cases.
+
+On Duo, live Best Lawyers notice removal and popup 7 → 8 were corroborated by a native persisted `bl_cookie_policy_V4=0`, unchanged after reload while paused. Independent page-visible cookie inspection remains outstanding; see the precise evidence boundary in the report. Physical iPhone/iPad and current iPad simulator coverage remain untested.
+
+The earlier macOS temporary-loading attempt was cancelled at local Touch ID/password authentication; Allow unsigned extensions remained off. That historical blocker is separate from the successful installed iOS simulator testing. Full Xcode is now installed on this preparation Mac.
 
 ## What the change does
 
@@ -68,7 +72,7 @@ The historical project was `safari/Quiet Exit/Quiet Exit.xcodeproj`, scheme `Qui
 
 ## Remaining iOS test work
 
-Test the real installed 0.1.3 extension first on an iPhone simulator and an iPad simulator, then on available physical iPhone/iPad devices. Keep simulator and physical results separate. Device trust, signing, Developer Mode or unlock blockers should be recorded precisely; they are not test passes.
+The two requested iPhone simulators have now been exercised. Continue the real installed 0.1.3 matrix on an iPad simulator and available physical iPhone/iPad devices; repeat affected cases if product source changes. Keep simulator and physical results separate. Device trust, signing, Developer Mode or unlock blockers should be recorded precisely; they are not test passes.
 
 Start the fixture server in a separate terminal:
 
@@ -96,13 +100,15 @@ For the new regressions, visit `/patterns?case=NAME` on the fixture server. The 
 
 Reload between cases, compare popup **count deltas**, and do not manually press the consent buttons while measuring automatic actions. Establish off-state controls and watch for interference: a fixture changing while Quiet Exit is disabled invalidates that baseline. Preserve the failed evidence and isolate the context before assigning a cause.
 
-**Best Lawyers requires a separate controlled live test** on `https://www.bestlawyers.com/` or the exact bare hostname. Localhost `best-*` pages cannot validate the hostname-bound native adapter. With a fresh consent context and an observed supported notice, record the exact essential-only control, automatic action, stable notice disappearance, one exact page-visible `bl_cookie_policy_V4=0` value and count +1; verify persistence after reload. A missing notice, stale consent, changed markup or inaccessible value is unexercised/inconclusive, not a pass. A visible replacement dialog, missing/accepting/ambiguous cookie outcome or accepting click must not count as successful refusal. Do not weaken the action guards to force a changed site through the test.
+**Best Lawyers has a scoped live result in the 31 October report; its independent page-visible check still requires a controlled live test** on `https://www.bestlawyers.com/` or the exact bare hostname. Localhost `best-*` pages cannot validate the hostname-bound native adapter. With a fresh consent context and an observed supported notice, record the exact essential-only control, automatic action, stable notice disappearance, one exact page-visible `bl_cookie_policy_V4=0` value and count +1; verify persistence after reload. A missing notice, stale consent, changed markup or inaccessible value is unexercised/inconclusive, not a pass. A visible replacement dialog, missing/accepting/ambiguous cookie outcome or accepting click must not count as successful refusal. Do not weaken the action guards to force a changed site through the test.
 
 ## Historical evidence and release boundary
 
 [3 October results](docs/IOS-TEST-RESULTS-2026-10-03.md) concern **0.1.2**: native simulator build/install/popup/refusal/preferences/persistence checks passed, and iPhone bfcache checks passed. Disable-during-queue timing was inconclusive; the full native negative matrix was incomplete. Physical iPhone installation succeeded but launch was blocked by a locked device; physical Safari behaviour was not verified, and physical iPad was untested.
 
-TestFlight 0.1.2 (1) was historically uploaded for internal testing. Its present availability has not been refreshed and it is not the new 0.1.3 build. No new TestFlight/App Store upload is part of this handoff. Keep the existing physical-device release hold. PR #2 merge authority was conditional on checks and the approved installed-extension test; the requested decision to defer that test had not been received when this handoff was prepared. Refresh Eric's instructions and live PR states before merging. This document does not waive tests or grant publication authority.
+App Store Connect access from this Mac was verified with HTTP 200 for app `6818695484`, bundle `com.ericescapes.quietexit`; existing build 1 is `VALID` and unexpired. Eric explicitly authorised a new TestFlight build **from this MacBook Air after testing**, superseding Foundation's original Mac-mini-only upload restriction. The existing distribution key was supplied locally and matched the pinned certificate; existing per-bundle App Store profiles were verified. No keys belong in Git or chat. Follow the reviewed disposable-keychain release script and require fresh ASC version/build/processing readback before reporting success. Record the actual release outcome separately; an unused build number must be checked at execution.
+
+Keep the physical-device/public-release hold. PR #2 merge authority remains conditional on checks and the approved installed-extension tests; PR #1 remains the separate draft to `main`. Inspect current-head CI/reviews and Eric's instructions before merging. This document does not itself grant publication authority or waive the remaining device checks.
 
 ## Workflow and return report
 

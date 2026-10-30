@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "observation": "read-only native Safari persisted-cookie after",
+  "observedAtUtc": "2026-10-30T16:33:40.400478Z",
+  "simulatorId": "11E7AF04-6698-4DBC-987F-042FFB5AB210",
+  "sourcePath": "/Users/eric/Library/Developer/CoreSimulator/Devices/11E7AF04-6698-4DBC-987F-042FFB5AB210/data/Containers/Data/Application/319BF668-E343-4217-A2C2-9047FC4378CD/Library/Cookies/Cookies.binarycookies",
+  "sourceBytes": 3628,
+  "sourceSha256": "4d60f8ec10d42586e2269501ebf2826ed47a1210b2cb586f1921b2a50295272c",
+  "sourceMtimeUtc": "2026-10-30T16:33:06.135056Z",
+  "sourceStableDuringRead": true,
+  "parseValidation": {
+    "magic": "cook",
+    "allPageSignaturesValid": true,
+    "allPageAndRecordBoundsValid": true,
+    "allRequiredStringOffsetsAndTerminatorsValid": true,
+    "nonoverlappingRecords": true,
+    "pageChecksumMatchesDocumentedEveryFourthByteSum": true,
+    "trailingBytesNotInterpreted": 87
+  },
+  "filter": {
+    "name": "bl_cookie_policy_V4",
+    "domains": [
+      "bestlawyers.com",
+      "www.bestlawyers.com",
+      ".bestlawyers.com"
+    ]
+  },
+  "records": [
+    {
+      "name": "bl_cookie_policy_V4",
+      "domain": "www.bestlawyers.com",
+      "path": "/",
+      "value": "0",
+      "flags": {
+        "raw": 17008,
+        "hex": "0x00004270",
+        "secure": false,
+        "httpOnly": false,
+        "otherBits": 17008
+      },
+      "recordLocation": {
+        "pageIndex": 0,
+        "recordIndex": 3,
+        "fileOffset": 634,
+        "recordBytes": 166
+      }
+    }
+  ],
+  "parserSourceSha256": "b6b001fb6741a0b6c2b5fa24a6d1f80c4fd2c7c42f7d99f36b3951e53277f7d6",
+  "formatSources": [
+    "https://github.com/interstateone/BinaryCookies#file-format",
+    "https://github.com/libyal/dtformats/blob/main/documentation/Safari%20Cookies.asciidoc"
+  ],
+  "limitations": [
+    "This is the on-disk file snapshot, not document.cookie or a remote-inspector observation.",
+    "Safari may not yet have flushed live cookies; absence proves absence only from this parsed disk snapshot.",
+    "The primary supplies switch/page context; this read does not observe switch state or attribute writes.",
+    "Persisted cookie values do not establish server-side consent enforcement or tracking prevention.",
+    "No other cookie values were decoded, emitted or copied. No full cookie file copy was made."
+  ]
+}

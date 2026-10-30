@@ -9,13 +9,29 @@ const generator = await readFile(new URL('../scripts/safari.mjs', import.meta.ur
 const configurations = ['macOS app Debug', 'macOS app Release', 'iOS app Debug', 'iOS app Release',
   'macOS extension Debug', 'macOS extension Release', 'iOS extension Debug', 'iOS extension Release'];
 const template = configurations.map(name => `/* ${name} */\n{\n\tCURRENT_PROJECT_VERSION = 9;\n\tMARKETING_VERSION = 1.0;\n\t${name.startsWith('iOS') ? 'IPHONEOS_DEPLOYMENT_TARGET = 15.0;' : 'MACOSX_DEPLOYMENT_TARGET = 10.14;'}\n\tOTHER_SETTING = preserved;\n}\n`).join('');
+const targets = ['Quiet Exit (iOS)', 'Quiet Exit (macOS)', 'Quiet Exit Extension (iOS)', 'Quiet Exit Extension (macOS)'];
+const xcprojTemplate = `{
+  "configurations": ["Debug", "Release",],
+  "targets": [
+${targets.map(name => `    {
+      "name": "${name}",
+      "build-settings": {
+        "CURRENT_PROJECT_VERSION": "9",
+        "MARKETING_VERSION": "1.0",
+        "${name.endsWith('(iOS)') ? 'IPHONEOS_DEPLOYMENT_TARGET' : 'MACOSX_DEPLOYMENT_TARGET'}": "${name === 'Quiet Exit (iOS)' ? '17.0' : name.endsWith('(iOS)') ? '15.0' : '12.0'}",
+        "OTHER_SETTING": ["$(inherited)", "preserved",],
+      },
+    },`).join('\n')}
+  ],
+}
+`;
 
-async function fixture(t, project = template) {
+async function fixture(t, project = template, filename = 'project.pbxproj') {
   const root = await mkdtemp(path.join(os.tmpdir(), 'quiet-exit-wrapper-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   await mkdir(path.join(root, 'scripts'));
   await mkdir(path.join(root, 'bin'));
-  await writeFile(path.join(root, 'package.json'), JSON.stringify({ version: '0.1.2' }));
+  await writeFile(path.join(root, 'package.json'), JSON.stringify({ version: '0.1.3' }));
   await writeFile(path.join(root, 'scripts/safari.mjs'), generator);
   await writeFile(path.join(root, 'scripts/safari-icons.mjs'),
     "import {writeFileSync} from 'node:fs'; writeFileSync(new URL('../icons-ran', import.meta.url), 'yes');");
@@ -28,11 +44,11 @@ if (args[0] === '--find') process.exit(0);
 const output = args[args.indexOf('--project-location') + 1];
 const project = path.join(output, 'Quiet Exit', 'Quiet Exit.xcodeproj');
 fs.mkdirSync(project, {recursive: true});
-fs.writeFileSync(path.join(project, 'project.pbxproj'), fs.readFileSync(path.join(process.cwd(), 'template.txt')));
+fs.writeFileSync(path.join(project, ${JSON.stringify(filename)}), fs.readFileSync(path.join(process.cwd(), 'template.txt')));
 `, { mode: 0o755 });
   return {
     root,
-    project: path.join(root, 'safari/Quiet Exit/Quiet Exit.xcodeproj/project.pbxproj'),
+    project: path.join(root, 'safari/Quiet Exit/Quiet Exit.xcodeproj', filename),
     run() {
       return spawnSync(process.execPath, ['scripts/safari.mjs'], {
         cwd: root, encoding: 'utf8', env: { ...process.env, PATH: `${path.join(root, 'bin')}${path.delimiter}${process.env.PATH}` }
@@ -47,12 +63,37 @@ test('fresh converter output stamps all app and extension configurations and ret
   assert.equal(result.status, 0, result.stderr);
   const generated = await readFile(f.project, 'utf8');
   assert.equal(generated, template.replaceAll('CURRENT_PROJECT_VERSION = 9;', 'CURRENT_PROJECT_VERSION = 1;')
-    .replaceAll('MARKETING_VERSION = 1.0;', 'MARKETING_VERSION = 0.1.2;')
+    .replaceAll('MARKETING_VERSION = 1.0;', 'MARKETING_VERSION = 0.1.3;')
     .replaceAll('IPHONEOS_DEPLOYMENT_TARGET = 15.0;', 'IPHONEOS_DEPLOYMENT_TARGET = 15.4;'));
   for (const name of configurations) {
     const block = generated.slice(generated.indexOf(`/* ${name} */`)).split('}')[0];
     assert.match(block, name.startsWith('iOS')
       ? /IPHONEOS_DEPLOYMENT_TARGET = 15\.4;/ : /MACOSX_DEPLOYMENT_TARGET = 10\.14;/);
+  }
+  await access(path.join(f.root, 'icons-ran'));
+});
+
+test('Xcode 27 packager output stamps all target defaults and preserves its trailing-comma format', async t => {
+  const f = await fixture(t, xcprojTemplate, 'project.xcproj');
+  const result = f.run();
+  assert.equal(result.status, 0, result.stderr);
+  const generated = await readFile(f.project, 'utf8');
+  assert.equal(generated, xcprojTemplate
+    .replaceAll('"CURRENT_PROJECT_VERSION": "9"', '"CURRENT_PROJECT_VERSION": "1"')
+    .replaceAll('"MARKETING_VERSION": "1.0"', '"MARKETING_VERSION": "0.1.3"')
+    .replaceAll('"IPHONEOS_DEPLOYMENT_TARGET": "17.0"', '"IPHONEOS_DEPLOYMENT_TARGET": "15.4"')
+    .replaceAll('"IPHONEOS_DEPLOYMENT_TARGET": "15.0"', '"IPHONEOS_DEPLOYMENT_TARGET": "15.4"'));
+  // Parse only in the test, after removing the fixture's known trailing commas,
+  // to verify every platform target independently of the stamp replacement.
+  const parsed = JSON.parse(generated.replace(/,(\s*[}\]])/g, '$1'));
+  assert.deepEqual(parsed.configurations, ['Debug', 'Release']);
+  for (const target of parsed.targets) {
+    assert.equal(target['build-settings'].MARKETING_VERSION, '0.1.3', target.name);
+    assert.equal(target['build-settings'].CURRENT_PROJECT_VERSION, '1', target.name);
+    assert.equal(target['build-settings'][target.name.endsWith('(iOS)')
+      ? 'IPHONEOS_DEPLOYMENT_TARGET' : 'MACOSX_DEPLOYMENT_TARGET'],
+    target.name.endsWith('(iOS)') ? '15.4' : '12.0', target.name);
+    assert.deepEqual(target['build-settings'].OTHER_SETTING, ['$(inherited)', 'preserved']);
   }
   await access(path.join(f.root, 'icons-ran'));
 });
@@ -96,3 +137,16 @@ test('missing iOS deployment settings fail before stamping a generated project',
   assert.equal(await readFile(f.project, 'utf8'), project);
   await assert.rejects(access(path.join(f.root, 'icons-ran')), { code: 'ENOENT' });
 });
+
+for (const setting of ['MARKETING_VERSION', 'CURRENT_PROJECT_VERSION', 'IPHONEOS_DEPLOYMENT_TARGET']) {
+  test(`Xcode 27 output missing ${setting} fails without changing the project or running icon setup`, async t => {
+    const project = xcprojTemplate.replace(new RegExp(`^.*"${setting}".*\\n`, 'gm'), '');
+    const f = await fixture(t, project, 'project.xcproj');
+    const result = f.run();
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, setting === 'IPHONEOS_DEPLOYMENT_TARGET'
+      ? /Missing iOS deployment settings/ : /Missing native version settings/);
+    assert.equal(await readFile(f.project, 'utf8'), project);
+    await assert.rejects(access(path.join(f.root, 'icons-ran')), { code: 'ENOENT' });
+  });
+}
