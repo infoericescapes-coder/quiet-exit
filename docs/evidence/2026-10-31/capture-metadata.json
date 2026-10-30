@@ -1,0 +1,208 @@
+{
+  "version": 1,
+  "recordedAtUtc": "2026-10-30T16:28:34.145023Z",
+  "timeBasis": "Original artifact filesystem modification timestamps observed during packaging. These are not camera capture times, trusted-clock proof, or extension-switch transition timestamps. Copied evidence file modification times may differ; use originalArtifactMtimeUtc below.",
+  "screenshots": [
+    {
+      "file": "duo-after-baseline-count0.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-after-baseline-count0.png",
+      "bytes": 1081257,
+      "sha256": "dca58033be763ca9a5d23045c5f430478183fd64a202c71547a986468a75d883",
+      "originalArtifactMtimeUtc": "2026-10-30T16:15:12.300923Z",
+      "originalArtifactMtimeNs": 1793376912300923189
+    },
+    {
+      "file": "duo-after-enabled-count3.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-after-enabled-count3.png",
+      "bytes": 1079236,
+      "sha256": "58519064d42339caf882b2eba00eff6990417c6b4ff633de9a2d7805ffcadca1",
+      "originalArtifactMtimeUtc": "2026-10-30T16:17:59.182657Z",
+      "originalArtifactMtimeNs": 1793377079182656807
+    },
+    {
+      "file": "duo-bestlawyers-before.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-bestlawyers-before.png",
+      "bytes": 759609,
+      "sha256": "e7c06970bb46df1eecb0f32aebcad6781ff7c270f548d22343ea0db73f4f1281",
+      "originalArtifactMtimeUtc": "2026-10-30T16:31:32.408865Z",
+      "originalArtifactMtimeNs": 1793377892408864938
+    },
+    {
+      "file": "duo-bestlawyers-enabled-count8.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-bestlawyers-enabled-count8.png",
+      "bytes": 871243,
+      "sha256": "8c0fefbd282155d021c71ed938e193bafdd142377b5f663cf2f6c31d8947b0a3",
+      "originalArtifactMtimeUtc": "2026-10-30T16:32:57.849049Z",
+      "originalArtifactMtimeNs": 1793377977849048834
+    },
+    {
+      "file": "duo-bestlawyers-paused-count7.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-bestlawyers-paused-count7.png",
+      "bytes": 822348,
+      "sha256": "31d6c8551d1ada6e8f4f7f277acd28b13383f96e73a27fdb4ad31423840863f1",
+      "originalArtifactMtimeUtc": "2026-10-30T16:32:48.601148Z",
+      "originalArtifactMtimeNs": 1793377968601147899
+    },
+    {
+      "file": "duo-bestlawyers-reload-paused-count8.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-bestlawyers-reload-paused-count8.png",
+      "bytes": 913576,
+      "sha256": "5df025c69854d2fdec3df0f1afd0904cf6468e86c86865e29aacbfc802d0b727",
+      "originalArtifactMtimeUtc": "2026-10-30T16:36:05.194788Z",
+      "originalArtifactMtimeNs": 1793378165194788442
+    },
+    {
+      "file": "duo-bfcache-on-count6.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-bfcache-on-count6.png",
+      "bytes": 734287,
+      "sha256": "069801491e7826978c253153de17b6200b6e263516ddd37502e721abf67d7514",
+      "originalArtifactMtimeUtc": "2026-10-30T16:22:40.671125Z",
+      "originalArtifactMtimeNs": 1793377360671125089
+    },
+    {
+      "file": "duo-bfcache-paused-count6.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-bfcache-paused-count6.png",
+      "bytes": 733615,
+      "sha256": "c2ee2bb46a666957dc8000418c639d79e430ea06c0f522df9b4d14422ec6a2e8",
+      "originalArtifactMtimeUtc": "2026-10-30T16:23:18.991822Z",
+      "originalArtifactMtimeNs": 1793377398991822005
+    },
+    {
+      "file": "duo-bfcache-resumed-count7.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-bfcache-resumed-count7.png",
+      "bytes": 731259,
+      "sha256": "716e2f8305fc67cf646bb8e4215ce8747b1a3c83ab4ff8d5ae8f06c7f92fcd6f",
+      "originalArtifactMtimeUtc": "2026-10-30T16:23:41.997941Z",
+      "originalArtifactMtimeNs": 1793377421997940935
+    },
+    {
+      "file": "duo-popup-inner-portrait.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-popup-inner-portrait.png",
+      "bytes": 571918,
+      "sha256": "ff89f82d47f19ea8951f2049ad9102ed64395d39892175633b65219973323220",
+      "originalArtifactMtimeUtc": "2026-10-30T16:25:36.716532Z",
+      "originalArtifactMtimeNs": 1793377536716532352
+    },
+    {
+      "file": "duo-queued-paused-count3.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-queued-paused-count3.png",
+      "bytes": 728343,
+      "sha256": "eb69119f03ec9010a0c34378f2f574a2684952eaaadcd786f5307fe4cde51d9d",
+      "originalArtifactMtimeUtc": "2026-10-30T16:18:43.727319Z",
+      "originalArtifactMtimeNs": 1793377123727319327
+    },
+    {
+      "file": "duo-repeat-arrived-paused-count4.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-repeat-arrived-paused-count4.png",
+      "bytes": 726387,
+      "sha256": "389a7dc3663b8eb5c5bddb723efc26cebe4c0d22f1a3eeebf4ad2a63a3ac8dbd",
+      "originalArtifactMtimeUtc": "2026-10-30T16:21:26.655674Z",
+      "originalArtifactMtimeNs": 1793377286655674567
+    },
+    {
+      "file": "duo-repeat-before-due-paused-count4.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-repeat-before-due-paused-count4.png",
+      "bytes": 728035,
+      "sha256": "dbe0045137c4552a4c9133b55135b624e33cedcfa68d70f974e24660b717dc91",
+      "originalArtifactMtimeUtc": "2026-10-30T16:20:45.482938Z",
+      "originalArtifactMtimeNs": 1793377245482937979
+    },
+    {
+      "file": "duo-repeat-resumed-count5.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-repeat-resumed-count5.png",
+      "bytes": 728330,
+      "sha256": "5dd001a486027f30efdb5a6e91858d9cfea0791150e8a6f6c9e77525f587cbb6",
+      "originalArtifactMtimeUtc": "2026-10-30T16:22:04.484661Z",
+      "originalArtifactMtimeNs": 1793377324484661080
+    },
+    {
+      "file": "duo-restart-paused-count7.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-restart-paused-count7.png",
+      "bytes": 671753,
+      "sha256": "bcc0b3c327afa295761a9fc223e797d01ceebd43d174e987d58c53e6b72f8cb0",
+      "originalArtifactMtimeUtc": "2026-10-30T16:25:07.848286Z",
+      "originalArtifactMtimeNs": 1793377507848285661
+    },
+    {
+      "file": "duo-resumed-count4.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-resumed-count4.png",
+      "bytes": 726348,
+      "sha256": "566467331f1793870a9bd91b454fce97def035091f0927b6a949122d472c9072",
+      "originalArtifactMtimeUtc": "2026-10-30T16:20:12.220342Z",
+      "originalArtifactMtimeNs": 1793377212220342255
+    },
+    {
+      "file": "iphone18-bfcache-corrected-paused-count6.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-bfcache-corrected-paused-count6.png",
+      "bytes": 368694,
+      "sha256": "f062b5dd4e7252c3d97ff2bb2a9f5e4e565ecfe70e306353be7cba1dbcede557",
+      "originalArtifactMtimeUtc": "2026-10-30T15:57:01.846718Z",
+      "originalArtifactMtimeNs": 1793375821846717749
+    },
+    {
+      "file": "iphone18-bfcache-corrected-resumed-count7.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-bfcache-corrected-resumed-count7.png",
+      "bytes": 403088,
+      "sha256": "4caac6b92e786720ee46398604d10fdb5c487c03a413582ad58c035c836362c0",
+      "originalArtifactMtimeUtc": "2026-10-30T15:57:13.010730Z",
+      "originalArtifactMtimeNs": 1793375833010729904
+    },
+    {
+      "file": "iphone18-bfcache-on-new-count6.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-bfcache-on-new-count6.png",
+      "bytes": 403220,
+      "sha256": "07a55f9f0110bc462523d3e62b4479c657b22a034079502a7353f774a3b88ed7",
+      "originalArtifactMtimeUtc": "2026-10-30T15:55:45.542399Z",
+      "originalArtifactMtimeNs": 1793375745542398645
+    },
+    {
+      "file": "iphone18-popup-landscape-footer.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-popup-landscape-footer.png",
+      "bytes": 733704,
+      "sha256": "95b2568976850dcecc672d75c414dec31757e64ea5d76ed544bef4a47447bcd7",
+      "originalArtifactMtimeUtc": "2026-10-30T15:58:50.258250Z",
+      "originalArtifactMtimeNs": 1793375930258250212
+    },
+    {
+      "file": "iphone18-popup-portrait-full.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-popup-portrait-full.png",
+      "bytes": 250633,
+      "sha256": "f2a5dad8143e5eb831705a932367d40da83790b7b8b49747da1cacabf0a33d4b",
+      "originalArtifactMtimeUtc": "2026-10-30T15:58:02.718392Z",
+      "originalArtifactMtimeNs": 1793375882718392285
+    },
+    {
+      "file": "iphone18-queued-arrived-paused-count3.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-queued-arrived-paused-count3.png",
+      "bytes": 365709,
+      "sha256": "4332953c51ef7a475713b23851fbd30ccb083a4e73086bfeda0e03664d9bdcdf",
+      "originalArtifactMtimeUtc": "2026-10-30T15:51:06.988132Z",
+      "originalArtifactMtimeNs": 1793375466988131961
+    },
+    {
+      "file": "iphone18-queued-paused-count3.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-queued-paused-count3.png",
+      "bytes": 408818,
+      "sha256": "783bcb00709607e1816e485ccb2191494a83240df1c6534fa8e037e38b1bebb7",
+      "originalArtifactMtimeUtc": "2026-10-30T15:50:58.430799Z",
+      "originalArtifactMtimeNs": 1793375458430798881
+    },
+    {
+      "file": "iphone18-restart-paused-count7.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-restart-paused-count7.png",
+      "bytes": 384823,
+      "sha256": "18fac5e7a200a94a25e871fe52e0d12ad8234b6bfe78ba7f9db4ad1475c8ca84",
+      "originalArtifactMtimeUtc": "2026-10-30T16:01:05.991540Z",
+      "originalArtifactMtimeNs": 1793376065991540348
+    },
+    {
+      "file": "iphone18-resumed-count4.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-resumed-count4.png",
+      "bytes": 406532,
+      "sha256": "700b191a36ee2d69f714de1b6c80c086de3189793a60e071c1296a93666ce0b3",
+      "originalArtifactMtimeUtc": "2026-10-30T15:51:18.218462Z",
+      "originalArtifactMtimeNs": 1793375478218461780
+    }
+  ],
+  "updatedAtUtc": "2026-10-30T16:37:58.776414Z"
+}

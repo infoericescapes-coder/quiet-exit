@@ -1,0 +1,66 @@
+{
+  "observedAt": "2026-10-30T17:27:53.836238+00:00",
+  "appId": "6818695484",
+  "sourceCommit": "21f1d4f0eba5feab06fe039e08cae6e8a6b398f2",
+  "sourceTree": "115cdefbbdf9b2eb16ce57f0682866232b666f17",
+  "sourceState": "Only documentation and evidence changes outstanding; product source unchanged from e43452fd1f2192b395f00b99a20c47de14a7c317",
+  "marketingVersion": "0.1.3",
+  "buildId": "f8f9b88b-bdf5-4faf-aef2-ae2aa429122b",
+  "buildNumber": "2",
+  "processingState": "VALID",
+  "uploadedDate": "2026-10-30T10:22:35-07:00",
+  "expired": false,
+  "buildAudienceType": "APP_STORE_ELIGIBLE",
+  "buildBetaDetail": {
+    "autoNotifyEnabled": true,
+    "internalBuildState": "IN_BETA_TESTING",
+    "externalBuildState": "READY_FOR_BETA_SUBMISSION"
+  },
+  "internalGroup": {
+    "id": "12e7c642-44b1-4892-a39e-73d5f9e51b28",
+    "name": "Eric Internal Testing",
+    "isInternalGroup": true,
+    "existingTesterCount": 1,
+    "readbackContainsBuild": true,
+    "existingBuild1Preserved": true
+  },
+  "whatToTest": {
+    "localizationId": "3eef34a7-10bd-46cd-8a19-d5d2a398d0e2",
+    "locale": "en-AU",
+    "text": "Quiet Exit 0.1.3 (2): safer refusal when cookie banner wording or controls change.\n\nPlease test on a physical iPhone or iPad:\n1. Enable Quiet Exit in Safari settings and allow it on the sites you choose to test.\n2. On a supported banner, confirm optional cookies are declined and the count increases once. Unclear or incomplete banners should remain available for manual handling.\n3. Pause Quiet Exit, open a fresh banner, then resume. It should stay untouched while paused and be handled once after resuming.\n4. Restart Safari and check that your switch setting and count persist. Check popup readability in portrait and landscape.\n5. With a fresh consent context on bestlawyers.com, check essential-only refusal and whether the banner stays dismissed after reload.\n\nReport the exact site URL, device, iOS version and observed result. Physical iPhone/iPad testing is still outstanding; existing automated and simulator results are recorded in the Foundation handoff.\n",
+    "readbackExactMatch": true
+  },
+  "toolchain": {
+    "xcodeVersion": "27.1",
+    "xcodeBuild": "27A9275",
+    "deviceSDK": "iphoneos27.1",
+    "deviceSDKBuild": "24A94232",
+    "globalXcodeUnchanged": "27.2 (27B52)"
+  },
+  "exportAudit": {
+    "appAndExtensionDistributionSignaturesValid": true,
+    "certificateSHA1": "7F10906FE961004F5693CDCD7D84C225F6B4017B",
+    "safariResourceMatches": 34,
+    "minimumOSVersion": "15.4",
+    "nonExemptEncryption": false,
+    "ipaSHA256": "4ee32c9b9a37c6de67a1b36a21dbeef792779da957b0a8f85c64b6f39cde400e",
+    "ipaBytes": 362542,
+    "archiveUsesDevelopmentSigning": true,
+    "localAuditSHA256": "bb0920820a215657b279d5b5d48522ce5f6604cab01c758fcc79d19549d65a7a"
+  },
+  "cleanup": {
+    "releaseExitCode": 0,
+    "keychainSearchListRestoredAndIndependentlyChecked": true,
+    "noTaskSigningOrRsyncTemporaryDirectoriesRemain": true,
+    "fixturePortsClosed": [
+      8765,
+      8767,
+      8768
+    ]
+  },
+  "limits": [
+    "No external testers or groups attached; no App Store or external beta review submitted.",
+    "Physical iPhone/iPad, current iPad simulator, and independent page-visible Best Lawyers cookie check remain outstanding.",
+    "Does not prove installation or notification delivery on the tester physical device."
+  ]
+}

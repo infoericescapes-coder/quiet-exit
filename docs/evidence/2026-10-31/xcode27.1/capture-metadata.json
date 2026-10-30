@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "recordedAtUtc": "2026-10-30T17:15:20.167472Z",
+  "timeBasis": "Original artifact filesystem modification timestamps observed during packaging. Not camera capture times, trusted-clock proof, or exact native switch transition times. Copied evidence mtimes can differ.",
+  "screenshots": [
+    {
+      "file": "duo-xcode271-smoke-enabled9.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-xcode271-smoke-enabled9.png",
+      "bytes": 673866,
+      "sha256": "a88e11294c9cb8bae555014583258b04485a59dbbf97d18519f3063e46b84503",
+      "originalArtifactMtimeUtc": "2026-10-30T17:09:32.920650Z",
+      "originalArtifactMtimeNs": 1793380172920649627
+    },
+    {
+      "file": "duo-xcode271-smoke-final-paused9.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-xcode271-smoke-final-paused9.png",
+      "bytes": 674878,
+      "sha256": "e471aa8fb14891b774243def20f137f736b6abc8de1a794d6a887bf0d5f4e5e2",
+      "originalArtifactMtimeUtc": "2026-10-30T17:10:03.899005Z",
+      "originalArtifactMtimeNs": 1793380203899004855
+    },
+    {
+      "file": "duo-xcode271-smoke-off-banner.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-xcode271-smoke-off-banner.png",
+      "bytes": 696937,
+      "sha256": "988298a106ab7e4d69dc6c14e85949b91721c99e8b60470836227bf77bc68095",
+      "originalArtifactMtimeUtc": "2026-10-30T17:09:01.945633Z",
+      "originalArtifactMtimeNs": 1793380141945633359
+    },
+    {
+      "file": "duo-xcode271-smoke-paused8.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/duo-xcode271-smoke-paused8.png",
+      "bytes": 678981,
+      "sha256": "14265d8b87f035dc5789e941df1eb3f8a85b3b538fdfd6f2bd0da309c8291598",
+      "originalArtifactMtimeUtc": "2026-10-30T17:08:25.738072Z",
+      "originalArtifactMtimeNs": 1793380105738072150
+    },
+    {
+      "file": "iphone18-xcode271-smoke-before-enable-paused7.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-xcode271-smoke-before-enable-paused7.png",
+      "bytes": 363817,
+      "sha256": "3a8a4e96e6d1fb6aa6888a318d67506061c90ac3242d36c3220c43827eb0ca88",
+      "originalArtifactMtimeUtc": "2026-10-30T17:12:17.345850Z",
+      "originalArtifactMtimeNs": 1793380337345849787
+    },
+    {
+      "file": "iphone18-xcode271-smoke-enabled8.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-xcode271-smoke-enabled8.png",
+      "bytes": 407674,
+      "sha256": "ff250d8711fdfdb57f07c00df8d50a17b1549a2fc5e8339f382e59c8f84b2940",
+      "originalArtifactMtimeUtc": "2026-10-30T17:12:53.778715Z",
+      "originalArtifactMtimeNs": 1793380373778715417
+    },
+    {
+      "file": "iphone18-xcode271-smoke-final-paused8.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-xcode271-smoke-final-paused8.png",
+      "bytes": 407936,
+      "sha256": "16ff1722749c0436312afcd1550d6810ab9034537875f6b9ffda91922627698b",
+      "originalArtifactMtimeUtc": "2026-10-30T17:13:24.476447Z",
+      "originalArtifactMtimeNs": 1793380404476447203
+    },
+    {
+      "file": "iphone18-xcode271-smoke-off-banner.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-xcode271-smoke-off-banner.png",
+      "bytes": 374766,
+      "sha256": "c01bdc085d4642f32226eba1e6f9e2c9fa6f0fb550e1b1cf4016bd61ad91b815",
+      "originalArtifactMtimeUtc": "2026-10-30T17:11:49.105571Z",
+      "originalArtifactMtimeNs": 1793380309105570702
+    },
+    {
+      "file": "iphone18-xcode271-smoke-paused7.png",
+      "sourceArtifactPath": "artifacts/ios-2026-10-31/iphone18-xcode271-smoke-paused7.png",
+      "bytes": 401775,
+      "sha256": "4ef1cba3a5a112dbf405fcfb7dfb9cb4067e76738f292c0592ce6c0b0335451d",
+      "originalArtifactMtimeUtc": "2026-10-30T17:11:24.868929Z",
+      "originalArtifactMtimeNs": 1793380284868928914
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "base_commit": "c3e696e09172637e381d7fc2eb6d289b10a6ab1a",
+  "verified_tree": "Uncommitted changes based on that commit, identified by source hashes. This is not a test of the unmodified base.",
+  "source_sha256": {
+    "engine.js": "d08398f31f4dca422fc908a7c2c4602fef9f5f2f08a6555bc688885e91bcc1e4",
+    "platforms.js": "5ed7b4cdf84dff59d1787911252e487d4576bdc58342b84fcc5ab78fc9bd6c92"
+  },
+  "independent_verification": {
+    "check_exit": 0,
+    "unit_tests": 105,
+    "package_exit": 0,
+    "consent_cases": {
+      "at": "2026-10-29T22:22:12.613Z",
+      "complete": true,
+      "lanes": {
+        "chromium": 19,
+        "webkit": 19,
+        "packaged-chromium": 4
+      },
+      "acceptClicks": 0,
+      "otherClicks": 0,
+      "countedCases": [
+        "chromium/best-desktop",
+        "chromium/best-mobile",
+        "webkit/best-desktop",
+        "webkit/best-mobile",
+        "packaged-chromium/best-desktop"
+      ],
+      "scope": "Synthetic local documents at intercepted URLs; DOM-engine and packaged Chromium evidence, not live-site or native Safari proof."
+    },
+    "negative_controls": {
+      "bypass_wording_guard_exit": 1,
+      "bypass_known_cookie_outcome_exit": 1,
+      "scope": "Temporary isolated copies; source unchanged"
+    }
+  },
+  "independent_review": {
+    "status": "no_functional_blockers",
+    "repaired": [
+      "hidden accessible wording",
+      "opaque action controls",
+      "native associated labels",
+      "generated wording",
+      "Best Lawyers replacement-dialog completion"
+    ],
+    "nonblocking_fixture_fonts": "fixed; primary gate rerun includes loaded-font assertions"
+  },
+  "primary_final_gate": {
+    "check_exit": 0,
+    "unit_tests": 105,
+    "consent_cases": 42,
+    "package_exit": 0,
+    "font_assertions_passed": true,
+    "source_sha256": {
+      "platforms.js": "5ed7b4cdf84dff59d1787911252e487d4576bdc58342b84fcc5ab78fc9bd6c92",
+      "engine.js": "d08398f31f4dca422fc908a7c2c4602fef9f5f2f08a6555bc688885e91bcc1e4"
+    }
+  },
+  "native_safari": {
+    "status": "blocked_on_local_authentication",
+    "user_authorised_temporary_testing": true,
+    "reason": "Safari requires local Touch ID/password authentication. User is away; prompt cancelled and Allow unsigned extensions observed off. No full Xcode is installed locally. Alternate host readiness remains unverified.",
+    "installed_new_version": false
+  },
+  "ios": "No fresh native/device evidence. Full Xcode packager unavailable on this host; existing release hold remains.",
+  "native_safari_page_engine": {
+    "status": "passed_in_private_window",
+    "source_commit": "73d29ee10b4492cfad82107312f3794189f8ad26",
+    "safari_version": "27.2",
+    "safari_build": "22625.2.8.11.9",
+    "cases": 16,
+    "passed": 16,
+    "started_at": "2026-10-29T23:15:45.610Z",
+    "finished_at": "2026-10-29T23:17:22.030Z",
+    "scope": "Native Safari page-engine evidence only. Actual source scripts run in local synthetic pages; no installed extension, popup, storage, permission, Best Lawyers hostname or live-site proof. Other installed extensions are not claimed disabled; per-case no-engine baselines detect observable interference only.",
+    "normal_window_control": "15/16 passed. drifted-manage baseline recorded one acceptance before Quiet Exit started; that case did not start the engine. The responsible external component was not identified. The failure was retained.",
+    "normal_evidence": "native-safari-engine-normal-profile.json",
+    "private_evidence": "native-safari-engine-private.json",
+    "harness": "native-safari-engine-harness.mjs"
+  }
+}
